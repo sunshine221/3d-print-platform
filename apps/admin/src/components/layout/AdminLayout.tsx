@@ -19,7 +19,11 @@ import { useState } from 'react';
 const { Sider, Header, Content } = Layout;
 
 const menuItems = [
-  { key: '/dashboard', icon: <DashboardOutlined />, label: '仪表盘' },
+  {
+    key: '/dashboard',
+    icon: <DashboardOutlined />,
+    label: '仪表盘',
+  },
   {
     key: 'content',
     icon: <FolderOutlined />,
@@ -69,23 +73,86 @@ export default function AdminLayout() {
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
-      <Sider collapsible collapsed={collapsed} onCollapse={setCollapsed}>
-        <div style={{ height: 48, margin: 16, color: '#fff', textAlign: 'center', fontSize: 18, fontWeight: 'bold' }}>
-          3D 打印
+      <Sider
+        collapsible
+        collapsed={collapsed}
+        onCollapse={setCollapsed}
+        style={{
+          background: 'linear-gradient(180deg, #0f172a 0%, #1e293b 100%)',
+        }}
+        width={240}
+      >
+        <div
+          style={{
+            height: 56,
+            margin: '16px 20px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 10,
+          }}
+        >
+          <div
+            style={{
+              width: 36,
+              height: 36,
+              borderRadius: 10,
+              background: 'linear-gradient(135deg, #3b82f6, #2563eb)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: 'white',
+              fontWeight: 700,
+              fontSize: 16,
+              flexShrink: 0,
+              boxShadow: '0 2px 8px rgba(37, 99, 235, 0.3)',
+            }}
+          >
+            3D
+          </div>
+          {!collapsed && (
+            <span style={{ color: '#fff', fontSize: 17, fontWeight: 700, letterSpacing: -0.3 }}>
+              3D 打印
+            </span>
+          )}
         </div>
+
         <Menu
           theme="dark"
           mode="inline"
-          defaultSelectedKeys={['/dashboard']}
           selectedKeys={[selectedKey]}
+          defaultOpenKeys={['content', 'users', 'system']}
           items={menuItems}
           onClick={({ key }) => navigate(key)}
+          style={{
+            background: 'transparent',
+            borderRight: 'none',
+            padding: '0 12px',
+          }}
         />
       </Sider>
+
       <Layout>
-        <Header style={{ background: '#fff', padding: '0 24px', display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
-          <Button icon={<LogoutOutlined />} onClick={handleLogout}>退出</Button>
+        <Header
+          style={{
+            background: '#fff',
+            padding: '0 24px',
+            display: 'flex',
+            justifyContent: 'flex-end',
+            alignItems: 'center',
+            borderBottom: '1px solid #f0f0f0',
+            height: 56,
+          }}
+        >
+          <Button
+            icon={<LogoutOutlined />}
+            onClick={handleLogout}
+            type="text"
+            style={{ color: '#6b7280' }}
+          >
+            退出
+          </Button>
         </Header>
+
         <Content style={{ margin: 24 }}>
           <Outlet />
         </Content>

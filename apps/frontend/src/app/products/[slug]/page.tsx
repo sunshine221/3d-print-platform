@@ -162,13 +162,13 @@ export default function ProductDetailPage() {
                   router.push(`/orders/confirm?skuId=${selectedSku.id}&productSlug=${slug}&quantity=1`);
                 }
               }}
-              className="w-full py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+              className="gradient-btn w-full py-3.5 rounded-xl font-semibold text-base disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none"
             >
               立即下单
             </button>
             <Link
               href={`/inquiry?productSlug=${slug}`}
-              className="w-full py-3 border border-blue-500 text-blue-600 rounded-lg font-semibold text-center hover:bg-blue-50 transition-colors"
+              className="w-full py-3.5 border-2 border-blue-500 text-blue-600 rounded-xl font-semibold text-center hover:bg-blue-50 hover:border-blue-600 transition-all duration-200"
             >
               代打询价
             </Link>

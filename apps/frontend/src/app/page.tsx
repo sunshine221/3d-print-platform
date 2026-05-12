@@ -21,18 +21,23 @@ export default function HomePage() {
   const topCategories = categories.slice(0, 4);
 
   return (
-    <div>
+    <div className="animate-fade-in">
       <BannerCarousel banners={banners} />
 
       {/* 热门分类 */}
-      <section className="max-w-6xl mx-auto px-4 py-16">
-        <h2 className="text-2xl font-bold text-center mb-8">热门分类</h2>
+      <section className="max-w-6xl mx-auto px-4 py-20">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold text-gray-900">热门分类</h2>
+          <p className="text-gray-500 mt-2">选择您感兴趣的打印类别</p>
+        </div>
         {categoriesLoading ? (
           <Loading />
         ) : topCategories.length > 0 ? (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {topCategories.map((cat) => (
-              <CategoryCard key={cat.id} category={cat} />
+            {topCategories.map((cat, i) => (
+              <div key={cat.id} className="animate-fade-up" style={{ animationDelay: `${i * 100}ms`, animationFillMode: 'both' }}>
+                <CategoryCard category={cat} />
+              </div>
             ))}
           </div>
         ) : (
@@ -41,12 +46,19 @@ export default function HomePage() {
       </section>
 
       {/* 精选产品 */}
-      <section className="bg-gray-50 py-16">
+      <section className="bg-gradient-to-b from-gray-50 to-white py-20">
         <div className="max-w-6xl mx-auto px-4">
-          <div className="flex items-center justify-between mb-8">
-            <h2 className="text-2xl font-bold">精选产品</h2>
-            <Link href="/products" className="text-blue-500 hover:text-blue-600 text-sm">
-              查看全部 →
+          <div className="flex items-end justify-between mb-10">
+            <div>
+              <h2 className="text-3xl font-bold text-gray-900">精选产品</h2>
+              <p className="text-gray-500 mt-2">高品质 3D 打印产品，满足各种需求</p>
+            </div>
+            <Link
+              href="/products"
+              className="group flex items-center gap-1 text-blue-600 hover:text-blue-700 font-medium text-sm transition-colors"
+            >
+              查看全部
+              <span className="group-hover:translate-x-0.5 transition-transform">→</span>
             </Link>
           </div>
           {productsLoading ? <Loading /> : <ProductGrid products={products} />}
@@ -54,17 +66,23 @@ export default function HomePage() {
       </section>
 
       {/* 代打服务入口 */}
-      <section className="py-16">
-        <div className="max-w-6xl mx-auto px-4 text-center">
-          <h2 className="text-2xl font-bold mb-4">代打服务</h2>
-          <p className="text-gray-600 mb-6">
+      <section className="py-20">
+        <div className="max-w-3xl mx-auto px-4 text-center">
+          <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg shadow-blue-500/20">
+            <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+            </svg>
+          </div>
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">代打服务</h2>
+          <p className="text-gray-500 mb-8 text-lg leading-relaxed">
             有 3D 模型文件？上传即可获取报价，专业团队为您打印
           </p>
           <Link
             href="/inquiry"
-            className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+            className="gradient-btn inline-flex items-center gap-2 px-8 py-3.5 rounded-xl font-semibold text-lg"
           >
             上传模型获取报价
+            <span className="text-white/80">→</span>
           </Link>
         </div>
       </section>
