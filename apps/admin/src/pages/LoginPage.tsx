@@ -11,13 +11,16 @@ export default function LoginPage() {
   const onFinish = async (values: { email: string; password: string }) => {
     setLoading(true);
     try {
-      const { data } = await axios.post('/api/v1/admin/auth/login', values);
-      localStorage.setItem('admin_token', data.data.accessToken);
-      localStorage.setItem('admin_refresh', data.data.refreshToken);
+      const res = await axios.post('/api/v1/admin/auth/login', values);
+      console.log('API response:', res.data);
+      localStorage.setItem('admin_token', res.data.data.accessToken);
+      localStorage.setItem('admin_refresh', res.data.data.refreshToken);
       message.success('登录成功');
       navigate('/dashboard');
-    } catch {
-      message.error('登录失败，请检查账号密码');
+    } catch (err: any) {
+      console.error('登录错误:', err);
+      const msg = err?.response?.data?.message || err?.message || '登录失败';
+      message.error(msg);
     } finally {
       setLoading(false);
     }

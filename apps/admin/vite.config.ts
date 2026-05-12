@@ -11,6 +11,8 @@ export default defineConfig({
   },
   server: {
     port: 3001,
+    host: '0.0.0.0',
+    allowedHosts: ['admin.ymbj.online', 'localhost'],
     proxy: {
       '/api': {
         target: 'http://localhost:4000',
