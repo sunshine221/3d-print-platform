@@ -10,6 +10,8 @@ import { ProductModule } from './modules/product/product.module';
 import { MediaModule } from './modules/media/media.module';
 import { BannerModule } from './modules/banner/banner.module';
 import { PageModule } from './modules/page/page.module';
+import { OrderModule } from './modules/order/order.module';
+import { InquiryModule } from './modules/inquiry/inquiry.module';
 
 @Module({
   imports: [
@@ -31,6 +33,8 @@ import { PageModule } from './modules/page/page.module';
     MediaModule,
     BannerModule,
     PageModule,
+    OrderModule,
+    InquiryModule,
   ],
   providers: [
     {

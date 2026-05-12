@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useProduct } from '@/hooks/useProduct';
 import { getRelatedProducts } from '@/lib/api';
@@ -17,6 +17,7 @@ import Loading from '@/components/ui/Loading';
 
 export default function ProductDetailPage() {
   const params = useParams();
+  const router = useRouter();
   const slug = params.slug as string;
 
   const { product, isLoading, isError } = useProduct(slug);
@@ -156,12 +157,17 @@ export default function ProductDetailPage() {
           <div className="flex flex-col gap-3 mt-6">
             <button
               disabled={!selectedSku}
+              onClick={() => {
+                if (selectedSku) {
+                  router.push(`/orders/confirm?skuId=${selectedSku.id}&productSlug=${slug}&quantity=1`);
+                }
+              }}
               className="w-full py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
             >
               立即下单
             </button>
             <Link
-              href={`/inquiry?productId=${product.id}`}
+              href={`/inquiry?productSlug=${slug}`}
               className="w-full py-3 border border-blue-500 text-blue-600 rounded-lg font-semibold text-center hover:bg-blue-50 transition-colors"
             >
               代打询价
