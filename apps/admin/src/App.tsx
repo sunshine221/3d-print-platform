@@ -9,6 +9,15 @@ import OrderListPage from './pages/OrderListPage';
 import OrderDetailPage from './pages/OrderDetailPage';
 import InquiryListPage from './pages/InquiryListPage';
 import InquiryDetailPage from './pages/InquiryDetailPage';
+import BannerPage from './pages/BannerPage';
+import PageListPage from './pages/PageListPage';
+import PageEditPage from './pages/PageEditPage';
+import MediaLibraryPage from './pages/MediaLibraryPage';
+import SystemConfigPage from './pages/SystemConfigPage';
+import ContactMessagePage from './pages/ContactMessagePage';
+import CustomerListPage from './pages/CustomerListPage';
+import CustomerDetailPage from './pages/CustomerDetailPage';
+import LogListPage from './pages/LogListPage';
 
 export default function App() {
   const hasToken = !!localStorage.getItem('admin_token');
@@ -30,6 +39,15 @@ export default function App() {
         <Route path="orders/:id" element={<OrderDetailPage />} />
         <Route path="inquiries" element={<InquiryListPage />} />
         <Route path="inquiries/:id" element={<InquiryDetailPage />} />
+        <Route path="banners" element={<BannerPage />} />
+        <Route path="pages" element={<PageListPage />} />
+        <Route path="pages/:id/edit" element={<PageEditPage />} />
+        <Route path="media" element={<MediaLibraryPage />} />
+        <Route path="settings" element={<SystemConfigPage />} />
+        <Route path="messages" element={<ContactMessagePage />} />
+        <Route path="customers" element={<CustomerListPage />} />
+        <Route path="customers/:id" element={<CustomerDetailPage />} />
+        <Route path="logs" element={<LogListPage />} />
       </Route>
     </Routes>
   );
