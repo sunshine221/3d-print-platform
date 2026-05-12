@@ -8,37 +8,37 @@ async function main() {
   console.log('Seeding database...');
 
   // 1. 角色
+  const adminPermissions = [
+    'product:read', 'product:write', 'product:delete',
+    'category:read', 'category:write', 'category:delete',
+    'order:read', 'order:write', 'order:status',
+    'inquiry:read', 'inquiry:write', 'inquiry:quote',
+    'user:read', 'user:manage',
+    'content:read', 'content:write',
+    'media:read', 'media:write',
+    'system:read', 'system:write',
+  ];
+
+  const editorPermissions = [
+    'product:read', 'product:write',
+    'category:read',
+    'order:read', 'order:status',
+    'inquiry:read', 'inquiry:write', 'inquiry:quote',
+    'user:read',
+    'content:read', 'content:write',
+    'media:read',
+  ];
+
   const adminRole = await prisma.role.upsert({
     where: { slug: 'admin' },
-    update: {},
-    create: {
-      name: '管理员',
-      slug: 'admin',
-      permissions: [
-        'product:read', 'product:write', 'product:delete',
-        'order:read', 'order:write', 'order:status',
-        'inquiry:read', 'inquiry:write', 'inquiry:quote',
-        'user:read', 'user:manage',
-        'content:read', 'content:write',
-        'system:read', 'system:write',
-      ],
-    },
+    update: { permissions: adminPermissions },
+    create: { name: '管理员', slug: 'admin', permissions: adminPermissions },
   });
 
   const editorRole = await prisma.role.upsert({
     where: { slug: 'editor' },
-    update: {},
-    create: {
-      name: '运营编辑',
-      slug: 'editor',
-      permissions: [
-        'product:read', 'product:write',
-        'order:read', 'order:status',
-        'inquiry:read', 'inquiry:write', 'inquiry:quote',
-        'user:read',
-        'content:read', 'content:write',
-      ],
-    },
+    update: { permissions: editorPermissions },
+    create: { name: '运营编辑', slug: 'editor', permissions: editorPermissions },
   });
 
   console.log(`Roles: ${adminRole.slug}, ${editorRole.slug}`);

@@ -3,6 +3,8 @@ import AdminLayout from './components/layout/AdminLayout';
 import DashboardPage from './pages/DashboardPage';
 import LoginPage from './pages/LoginPage';
 import ProductListPage from './pages/ProductListPage';
+import ProductEditPage from './pages/ProductEditPage';
+import CategoryPage from './pages/CategoryPage';
 import OrderListPage from './pages/OrderListPage';
 import InquiryListPage from './pages/InquiryListPage';
 
@@ -19,6 +21,9 @@ export default function App() {
         <Route index element={<Navigate to="/dashboard" />} />
         <Route path="dashboard" element={<DashboardPage />} />
         <Route path="products" element={<ProductListPage />} />
+        <Route path="products/create" element={<ProductEditPage />} />
+        <Route path="products/:id/edit" element={<ProductEditPage />} />
+        <Route path="categories" element={<CategoryPage />} />
         <Route path="orders" element={<OrderListPage />} />
         <Route path="inquiries" element={<InquiryListPage />} />
       </Route>

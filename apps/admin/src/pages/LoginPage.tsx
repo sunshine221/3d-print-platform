@@ -1,12 +1,10 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Form, Input, Button, Card, message } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import axios from 'axios';
 
 export default function LoginPage() {
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
 
   const onFinish = async (values: { email: string; password: string }) => {
     setLoading(true);
@@ -16,7 +14,7 @@ export default function LoginPage() {
       localStorage.setItem('admin_token', res.data.data.accessToken);
       localStorage.setItem('admin_refresh', res.data.data.refreshToken);
       message.success('登录成功');
-      navigate('/dashboard');
+      window.location.href = '/dashboard';
     } catch (err: any) {
       console.error('登录错误:', err);
       const msg = err?.response?.data?.message || err?.message || '登录失败';

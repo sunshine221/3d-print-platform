@@ -5,6 +5,9 @@ import { APP_GUARD } from '@nestjs/core';
 import { AuthModule } from './modules/auth/auth.module';
 import { AdminAuthModule } from './modules/admin-auth/admin-auth.module';
 import { UserModule } from './modules/user/user.module';
+import { CategoryModule } from './modules/category/category.module';
+import { ProductModule } from './modules/product/product.module';
+import { MediaModule } from './modules/media/media.module';
 
 @Module({
   imports: [
@@ -21,6 +24,9 @@ import { UserModule } from './modules/user/user.module';
     AuthModule,
     AdminAuthModule,
     UserModule,
+    CategoryModule,
+    ProductModule,
+    MediaModule,
   ],
   providers: [
     {

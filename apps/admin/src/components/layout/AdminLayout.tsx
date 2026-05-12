@@ -5,6 +5,7 @@ import {
   InboxOutlined,
   ShoppingCartOutlined,
   FileTextOutlined,
+  FolderOutlined,
   LogoutOutlined,
 } from '@ant-design/icons';
 import { useState } from 'react';
@@ -14,6 +15,7 @@ const { Sider, Header, Content } = Layout;
 const menuItems = [
   { key: '/dashboard', icon: <DashboardOutlined />, label: '仪表盘' },
   { key: '/products', icon: <InboxOutlined />, label: '产品管理' },
+  { key: '/categories', icon: <FolderOutlined />, label: '分类管理' },
   { key: '/orders', icon: <ShoppingCartOutlined />, label: '订单管理' },
   { key: '/inquiries', icon: <FileTextOutlined />, label: '代打询价' },
 ];
