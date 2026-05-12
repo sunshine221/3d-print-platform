@@ -205,6 +205,7 @@ export class ProductService {
         ...rest,
         categories: categories.map((c: any) => c.category),
         minPrice: prices.length > 0 ? Math.min(...prices) : null,
+        maxPrice: prices.length > 0 ? Math.max(...prices) : null,
       };
     });
   }

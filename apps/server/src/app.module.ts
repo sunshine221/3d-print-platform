@@ -8,6 +8,8 @@ import { UserModule } from './modules/user/user.module';
 import { CategoryModule } from './modules/category/category.module';
 import { ProductModule } from './modules/product/product.module';
 import { MediaModule } from './modules/media/media.module';
+import { BannerModule } from './modules/banner/banner.module';
+import { PageModule } from './modules/page/page.module';
 
 @Module({
   imports: [
@@ -27,6 +29,8 @@ import { MediaModule } from './modules/media/media.module';
     CategoryModule,
     ProductModule,
     MediaModule,
+    BannerModule,
+    PageModule,
   ],
   providers: [
     {

@@ -5,15 +5,21 @@ export interface ApiResponse<T = unknown> {
   message: string;
 }
 
+export interface PaginationInfo {
+  page: number;
+  pageSize: number;
+  total: number;
+  totalPages: number;
+}
+
+export interface PaginatedData<T> {
+  items: T[];
+  pagination: PaginationInfo;
+}
+
 export interface PaginatedResponse<T> {
   code: number;
-  data: T[];
-  pagination: {
-    page: number;
-    pageSize: number;
-    total: number;
-    totalPages: number;
-  };
+  data: PaginatedData<T>;
   message: string;
 }
 
@@ -112,6 +118,7 @@ export interface ProductListItem {
   materials: string[];
   techniques: string[];
   minPrice: number | null;
+  maxPrice: number | null;
   status: ProductStatus;
   viewCount: number;
   createdAt: string;
