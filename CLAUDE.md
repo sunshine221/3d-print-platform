@@ -2,6 +2,16 @@
 
 本文件为 Claude Code（claude.ai/code）在此仓库中工作时提供指导。
 
+## 上下文引导
+
+新对话时优先读取以下文件了解项目上下文：
+
+- `CLAUDE.md`（本文件）
+- `README.md`
+- `specs/requirements.md`、`specs/architecture.md`
+- `docs/README.md`（知识库索引）
+- `contexts/context.md`（如存在）
+
 ## 项目概述
 
 这是一个 **3D 打印平台** monorepo，包含两条业务线：
@@ -16,6 +26,51 @@
   - `CHANGELOG.md` — 重要变更记录
   - `deployment.md` — 部署指南
   - `NNN-*.md` — 独立知识条目（踩坑、学习、决策）
+
+## 知识沉淀规范
+
+> 所有值得记忆的内容——不仅是问题和修复，还有学习心得、技术决策、最佳实践——都必须记录到 `docs/`。
+
+### 何时记录
+
+- **踩坑修复**：非显而易见的 bug、根因、解决过程
+- **学习心得**：新发现的技术模式、框架行为、工具技巧
+- **技术决策**：选型理由、架构权衡、设计取舍
+- **环境变更**：配置修改、依赖升级、部署流程调整
+
+### 记录格式
+
+每个独立条目文件（`NNN-见名知意.md`）：
+1. 编号标题：`# NNN — 一句话描述`
+2. 元信息行：`**日期** | **分类**`（Bug/运维/前端/后端/数据库/学习/决策…）
+3. 正文：现象 → 根因 → 修复/结论 → 教训
+4. 关联：`[[other-file]]` 链接相关条目
+
+编号三位数字，按时间顺序递增。文件名 kebab-case，见名知意。
+
+### 执行规则
+
+- 值得记录的内容必须留下记录，不是可选项
+- 每次会话结束时检查是否有新知识需要写入
+- `docs/README.md` 索引和 `docs/CHANGELOG.md` 变更记录同步更新
+- 代码层面的变更（bug 修复、feature 实现）通过 git commit 记录，不在此列
+
+## 工具使用
+
+### Agent 速查（按场景）
+
+以下场景优先使用 Agent，不在主对话中逐文件操作：
+
+| 场景 | Agent |
+|------|-------|
+| 多文件代码探索 | Explore |
+| 代码审查（PR 前） | code-reviewer |
+| 安全检查 | security-auditor |
+| 测试编写 | test-automator |
+| 代码简化/重构 | code-simplifier |
+| 架构评审 | architecture-reviewer |
+| 性能分析 | performance-engineer |
+| 独立并行任务 | general-purpose |
 
 ## 仓库结构
 
@@ -80,7 +135,7 @@ src/
   app.module.ts              # 根模块：ConfigModule + ThrottlerModule + Auth/AdminAuth/User
   common/
     decorators/              # @Public()、@CurrentUser()
-    guards/                  # JwtAuthGuid、JwtAdminGuard（继承 passport-jwt）
+    guards/                  # JwtAuthGuard、JwtAdminGuard（继承 passport-jwt）
     interceptors/            # TransformInterceptor — 将响应包装为 {code:0, data, message}
     filters/                 # AllExceptionsFilter — 返回 {code:N*100, message, data:null}
   modules/
