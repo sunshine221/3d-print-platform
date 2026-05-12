@@ -9,7 +9,10 @@
     "format": "prettier --write \"**/*.{ts,tsx,json,md}\"",
     "db:migrate": "pnpm --filter @3d-print/server db:migrate",
     "db:seed": "pnpm --filter @3d-print/server db:seed",
-    "db:studio": "pnpm --filter @3d-print/server db:studio"
+    "db:studio": "pnpm --filter @3d-print/server db:studio",
+    "test": "pnpm --filter @3d-print/server test",
+    "test:e2e": "pnpm --filter @3d-print/server test:e2e",
+    "test:cov": "pnpm --filter @3d-print/server test:cov"
   },
   "devDependencies": {
     "prettier": "^3.2.0",

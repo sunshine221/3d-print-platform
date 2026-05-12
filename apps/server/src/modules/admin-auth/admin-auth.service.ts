@@ -102,7 +102,9 @@ export class AdminAuthService {
       name: user.name,
       avatarUrl: user.avatarUrl,
       role: user.role.slug,
-      permissions: user.role.permissions as string[],
+      permissions: (typeof user.role.permissions === 'string'
+        ? JSON.parse(user.role.permissions as string)
+        : user.role.permissions) as string[],
     };
   }
 

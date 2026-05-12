@@ -1,0 +1,22 @@
+{
+  "moduleFileExtensions": ["js", "json", "ts"],
+  "rootDir": ".",
+  "testEnvironment": "node",
+  "testRegex": ".e2e-spec.ts$",
+  "transform": {
+    "^.+\\.(t|j)s$": ["ts-jest", {
+      "tsconfig": {
+        "esModuleInterop": true,
+        "module": "CommonJS",
+        "moduleResolution": "node",
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "strictPropertyInitialization": false
+      }
+    }]
+  },
+  "moduleNameMapper": {
+    "^@3d-print/types$": "<rootDir>/../../packages/shared-types/src",
+    "^@3d-print/utils$": "<rootDir>/../../packages/shared-utils/src"
+  }
+}
