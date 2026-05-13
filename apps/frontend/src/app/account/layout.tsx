@@ -24,8 +24,8 @@ export default function AccountLayout({ children }: { children: React.ReactNode 
       <div className="flex gap-8">
         <aside className="w-48 shrink-0">
           <div className="mb-4 pb-4 border-b">
-            <p className="font-medium text-gray-900">{user?.name || user?.email}</p>
-            <p className="text-sm text-gray-500">{user?.email}</p>
+            <p className="font-medium text-gray-900">{user?.name || user?.username}</p>
+            <p className="text-sm text-gray-500">{user?.phone}</p>
           </div>
           <nav className="space-y-1">
             {navItems.map((item) => (

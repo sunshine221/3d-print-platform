@@ -5,7 +5,7 @@ import api from '../services/api';
 interface LogItem {
   id: string;
   adminUserId: string | null;
-  adminUser: { email: string; name: string } | null;
+  adminUser: { username: string; name: string } | null;
   action: string;
   targetType: string | null;
   targetId: string | null;
@@ -47,7 +47,7 @@ export default function LogListPage() {
       key: 'admin',
       width: 150,
       render: (_: unknown, record: LogItem) =>
-        record.adminUser ? record.adminUser.email : '系统',
+        record.adminUser ? record.adminUser.username : '系统',
     },
     {
       title: '操作',

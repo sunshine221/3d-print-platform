@@ -23,7 +23,7 @@ interface RecentOrder {
   totalPrice: string;
   status: string;
   createdAt: string;
-  user: { email: string; name: string | null };
+  user: { phone: string; name: string | null };
 }
 
 interface RecentInquiry {
@@ -31,7 +31,7 @@ interface RecentInquiry {
   inquiryNo: string;
   status: string;
   createdAt: string;
-  user: { email: string; name: string | null };
+  user: { phone: string; name: string | null };
 }
 
 const STATUS_COLORS: Record<string, string> = {
@@ -193,7 +193,7 @@ export default function DashboardPage() {
                   title: '用户',
                   key: 'user',
                   width: 180,
-                  render: (_: unknown, r: RecentOrder) => r.user.email,
+                  render: (_: unknown, r: RecentOrder) => r.user.phone,
                 },
                 {
                   title: '金额',
@@ -232,7 +232,7 @@ export default function DashboardPage() {
                   title: '用户',
                   key: 'user',
                   width: 180,
-                  render: (_: unknown, r: RecentInquiry) => r.user.email,
+                  render: (_: unknown, r: RecentInquiry) => r.user.phone,
                 },
                 {
                   title: '状态',

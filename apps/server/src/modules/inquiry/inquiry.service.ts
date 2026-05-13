@@ -147,7 +147,7 @@ export class InquiryService {
         where: where as any,
         include: {
           product: { select: { id: true, name: true } },
-          user: { select: { id: true, email: true, name: true } },
+          user: { select: { id: true, username: true, phone: true, name: true } },
         },
         orderBy: { createdAt: 'desc' },
         skip: (query.page - 1) * query.pageSize,

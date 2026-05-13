@@ -49,7 +49,7 @@ function mockOrder(overrides: Record<string, unknown> = {}) {
     sourceInquiryId: null,
     createdAt: new Date(),
     updatedAt: new Date(),
-    user: { email: 'a@b.com', name: '张三' },
+    user: { phone: '13800001111', name: '张三' },
     items: [],
     logs: [],
     ...overrides,

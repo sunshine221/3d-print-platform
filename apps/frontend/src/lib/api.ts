@@ -19,6 +19,21 @@ import type {
 
 const BASE_URL = '/api/v1';
 
+function getToken(): string | null {
+  if (typeof window === 'undefined') return null;
+  return localStorage.getItem('access_token');
+}
+
+function setTokenCookie(token: string) {
+  if (typeof window === 'undefined') return;
+  document.cookie = `access_token=${token}; path=/; SameSite=Lax; ${location.protocol === 'https:' ? 'Secure;' : ''}`;
+}
+
+function clearTokenCookie() {
+  if (typeof window === 'undefined') return;
+  document.cookie = 'access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+}
+
 class ApiError extends Error {
   code: number;
   constructor(code: number, message: string) {
@@ -28,11 +43,22 @@ class ApiError extends Error {
 }
 
 async function apiClient<T>(path: string, options?: RequestInit): Promise<T> {
+  const token = getToken();
+  const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+  if (token) headers['Authorization'] = `Bearer ${token}`;
+
+  const mergedHeaders = { ...headers, ...(options?.headers as Record<string, string> || {}) };
   const res = await fetch(`${BASE_URL}${path}`, {
     credentials: 'include',
-    headers: { 'Content-Type': 'application/json' },
     ...options,
+    headers: mergedHeaders,
   });
+
+  if (res.status === 401) {
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+    clearTokenCookie();
+  }
 
   const json: ApiResponse<T> = await res.json();
 
@@ -85,21 +111,32 @@ export async function getPage(slug: string): Promise<PageContent> {
 // ===== 认证 =====
 
 export async function login(data: LoginRequest): Promise<TokenPair> {
-  return apiClient<TokenPair>('/auth/login', {
+  const tokens = await apiClient<TokenPair>('/auth/login', {
     method: 'POST',
     body: JSON.stringify(data),
   });
+  localStorage.setItem('access_token', tokens.accessToken);
+  localStorage.setItem('refresh_token', tokens.refreshToken);
+  setTokenCookie(tokens.accessToken);
+  return tokens;
 }
 
 export async function register(data: RegisterRequest): Promise<TokenPair> {
-  return apiClient<TokenPair>('/auth/register', {
+  const tokens = await apiClient<TokenPair>('/auth/register', {
     method: 'POST',
     body: JSON.stringify(data),
   });
+  localStorage.setItem('access_token', tokens.accessToken);
+  localStorage.setItem('refresh_token', tokens.refreshToken);
+  setTokenCookie(tokens.accessToken);
+  return tokens;
 }
 
 export async function logout(): Promise<void> {
   await apiClient('/auth/logout', { method: 'POST' });
+  localStorage.removeItem('access_token');
+  localStorage.removeItem('refresh_token');
+  clearTokenCookie();
 }
 
 export async function refreshToken(refreshToken: string): Promise<TokenPair> {
@@ -120,23 +157,16 @@ export async function updateMe(data: UpdateProfileRequest): Promise<AuthUser> {
   });
 }
 
-export async function sendCode(email: string): Promise<void> {
-  await apiClient('/auth/send-code', {
-    method: 'POST',
-    body: JSON.stringify({ email }),
-  });
-}
 
-export async function forgotPassword(email: string): Promise<void> {
+export async function forgotPassword(phone: string): Promise<void> {
   await apiClient('/auth/forgot-password', {
     method: 'POST',
-    body: JSON.stringify({ email }),
+    body: JSON.stringify({ phone }),
   });
 }
 
 export async function resetPassword(data: {
-  email: string;
-  code: string;
+  phone: string;
   newPassword: string;
 }): Promise<void> {
   await apiClient('/auth/reset-password', {

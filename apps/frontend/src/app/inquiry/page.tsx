@@ -1,13 +1,13 @@
 'use client';
 
-import { useState, useEffect, FormEvent } from 'react';
+import { Suspense, useState, useEffect, FormEvent } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import useSWR from 'swr';
 import { createInquiry, getProductBySlug } from '@/lib/api';
 import { useAuth } from '@/hooks/useAuth';
 import Loading from '@/components/ui/Loading';
 
-export default function InquiryPage() {
+function InquiryForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { user, isLoggedIn, isLoading: authLoading } = useAuth();
@@ -197,5 +197,13 @@ export default function InquiryPage() {
         </button>
       </form>
     </div>
+  );
+}
+
+export default function InquiryPage() {
+  return (
+    <Suspense fallback={<Loading />}>
+      <InquiryForm />
+    </Suspense>
   );
 }

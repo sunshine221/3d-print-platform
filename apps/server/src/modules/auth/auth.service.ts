@@ -11,7 +11,6 @@ import { PrismaClient } from '@prisma/client';
 import {
   RegisterDto,
   LoginDto,
-  SendCodeDto,
   ResetPasswordDto,
   ChangePasswordDto,
 } from './dto/auth.dto';
@@ -19,11 +18,18 @@ import { TokenPair } from '@3d-print/types';
 
 const prisma = new PrismaClient();
 
+function generateUsername(): string {
+  const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+  let result = 'user_';
+  for (let i = 0; i < 6; i++) result += chars[Math.floor(Math.random() * chars.length)];
+  return result;
+}
+
 @Injectable()
 export class AuthService {
   constructor(private jwtService: JwtService) {}
 
-  private generateTokenPair(payload: { sub: string; email: string }): TokenPair {
+  private generateTokenPair(payload: { sub: string; phone: string }): TokenPair {
     const accessToken = this.jwtService.sign(payload, {
       secret: process.env.JWT_USER_SECRET || 'dev-user-secret',
       expiresIn: '15m',
@@ -36,43 +42,59 @@ export class AuthService {
   }
 
   async register(dto: RegisterDto) {
-    // 验证码检查
-    const code = await prisma.verificationCode.findFirst({
-      where: { email: dto.email, code: dto.code, type: 'register', used: false },
-      orderBy: { createdAt: 'desc' },
-    });
-    if (!code || code.expiresAt < new Date()) {
-      throw new BadRequestException('验证码无效或已过期');
+    if (dto.password !== dto.confirmPassword) {
+      throw new BadRequestException('两次密码不一致');
     }
 
-    // 检查是否已注册
-    const existing = await prisma.user.findUnique({ where: { email: dto.email } });
-    if (existing) throw new ConflictException('该邮箱已被注册');
+    const existingPhone = await prisma.user.findUnique({ where: { phone: dto.phone } });
+    if (existingPhone) throw new ConflictException('该手机号已注册');
 
-    // 创建用户
     const passwordHash = await bcrypt.hash(dto.password, 10);
+
+    let username = generateUsername();
+    while (await prisma.user.findUnique({ where: { username } })) {
+      username = generateUsername();
+    }
+
     const user = await prisma.user.create({
-      data: { email: dto.email, passwordHash, name: dto.name },
+      data: {
+        phone: dto.phone,
+        username,
+        passwordHash,
+        name: dto.name || `用户${dto.phone.slice(-4)}`,
+      },
     });
 
-    // 标记验证码已用
-    await prisma.verificationCode.update({ where: { id: code.id }, data: { used: true } });
+    const tokens = this.generateTokenPair({ sub: user.id, phone: user.phone });
+    const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+    await prisma.refreshToken.create({
+      data: { userId: user.id, token: tokens.refreshToken, expiresAt },
+    });
 
-    // 签发 Token
-    return this.generateTokenPair({ sub: user.id, email: user.email });
+    return {
+      ...tokens,
+      user: {
+        id: user.id,
+        username: user.username,
+        phone: user.phone.slice(0, 3) + '****' + user.phone.slice(-4),
+      },
+    };
   }
 
   async login(dto: LoginDto) {
-    const user = await prisma.user.findUnique({ where: { email: dto.email } });
-    if (!user) throw new UnauthorizedException('邮箱或密码错误');
+    const isPhone = /^1[3-9]\d{9}$/.test(dto.account);
+    const user = isPhone
+      ? await prisma.user.findUnique({ where: { phone: dto.account } })
+      : await prisma.user.findUnique({ where: { username: dto.account } });
+
+    if (!user) throw new UnauthorizedException('手机号/账号或密码错误');
     if (user.status === 'disabled') throw new UnauthorizedException('账号已被禁用');
 
     const valid = await bcrypt.compare(dto.password, user.passwordHash);
-    if (!valid) throw new UnauthorizedException('邮箱或密码错误');
+    if (!valid) throw new UnauthorizedException('手机号/账号或密码错误');
 
-    const tokens = this.generateTokenPair({ sub: user.id, email: user.email });
+    const tokens = this.generateTokenPair({ sub: user.id, phone: user.phone });
 
-    // 存储 Refresh Token
     const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
     await prisma.refreshToken.create({
       data: { userId: user.id, token: tokens.refreshToken, expiresAt },
@@ -87,7 +109,6 @@ export class AuthService {
       throw new UnauthorizedException('令牌无效或已过期');
     }
 
-    // 吊销旧 Token
     await prisma.refreshToken.delete({ where: { id: stored.id } });
 
     const user = await prisma.user.findUnique({ where: { id: stored.userId! } });
@@ -95,9 +116,8 @@ export class AuthService {
       throw new UnauthorizedException('用户不可用');
     }
 
-    const tokens = this.generateTokenPair({ sub: user.id, email: user.email });
+    const tokens = this.generateTokenPair({ sub: user.id, phone: user.phone });
 
-    // 存储新 Refresh Token
     const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
     await prisma.refreshToken.create({
       data: { userId: user.id, token: tokens.refreshToken, expiresAt },
@@ -107,61 +127,24 @@ export class AuthService {
   }
 
   async logout(userId: string) {
-    // 删除所有 refresh token
     await prisma.refreshToken.deleteMany({ where: { userId } });
     return { success: true };
   }
 
-  async sendCode(email: string) {
-    const code = String(Math.floor(1000 + Math.random() * 9000));
-    await prisma.verificationCode.create({
-      data: {
-        email,
-        code,
-        type: 'register',
-        expiresAt: new Date(Date.now() + 10 * 60 * 1000),
-      },
-    });
-
-    // TODO: 实际发送邮件（开发环境用 MailHog 查看 http://localhost:8025）
-    console.log(`[Verification Code] ${email}: ${code}`);
-    return { message: '验证码已发送' };
-  }
-
-  async forgotPassword(email: string) {
-    const user = await prisma.user.findUnique({ where: { email } });
-    if (!user) return { message: '如该邮箱已注册，重置邮件已发送' };
-
-    const code = String(Math.floor(1000 + Math.random() * 9000));
-    await prisma.verificationCode.create({
-      data: {
-        email,
-        code,
-        type: 'reset_password',
-        expiresAt: new Date(Date.now() + 10 * 60 * 1000),
-      },
-    });
-
-    console.log(`[Reset Password Code] ${email}: ${code}`);
-    return { message: '如该邮箱已注册，重置邮件已发送' };
+  async forgotPassword(phone: string) {
+    return { message: '如该手机号已注册，可直接重置密码' };
   }
 
   async resetPassword(dto: ResetPasswordDto) {
-    const code = await prisma.verificationCode.findFirst({
-      where: { email: dto.email, code: dto.code, type: 'reset_password', used: false },
-      orderBy: { createdAt: 'desc' },
-    });
-    if (!code || code.expiresAt < new Date()) {
-      throw new BadRequestException('验证码无效或已过期');
-    }
+    const user = await prisma.user.findUnique({ where: { phone: dto.phone } });
+    if (!user) return { message: '密码重置成功' };
 
     const passwordHash = await bcrypt.hash(dto.newPassword, 10);
     await prisma.user.update({
-      where: { email: dto.email },
+      where: { phone: dto.phone },
       data: { passwordHash },
     });
 
-    await prisma.verificationCode.update({ where: { id: code.id }, data: { used: true } });
     return { message: '密码重置成功' };
   }
 
@@ -183,9 +166,9 @@ export class AuthService {
     if (!user) throw new UnauthorizedException();
     return {
       id: user.id,
-      email: user.email,
-      name: user.name,
+      username: user.username,
       phone: user.phone,
+      name: user.name,
       avatarUrl: user.avatarUrl,
     };
   }

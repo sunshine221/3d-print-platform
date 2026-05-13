@@ -8,9 +8,9 @@ import api from '../services/api';
 
 interface UserItem {
   id: string;
-  email: string;
+  username: string;
   name: string | null;
-  phone: string | null;
+  phone: string;
   status: string;
   createdAt: string;
   _count: { orders: number; inquiries: number };
@@ -57,8 +57,8 @@ export default function CustomerListPage() {
       key: 'user',
       render: (_: unknown, record: UserItem) => (
         <div>
-          <div style={{ fontWeight: 500 }}>{record.name || '未设置'}</div>
-          <div style={{ fontSize: 12, color: '#999' }}>{record.email}</div>
+          <div style={{ fontWeight: 500 }}>{record.name || record.username}</div>
+          <div style={{ fontSize: 12, color: '#999' }}>{record.phone}</div>
         </div>
       ),
     },
@@ -112,7 +112,7 @@ export default function CustomerListPage() {
         <Row gutter={16}>
           <Col span={8}>
             <Input
-              placeholder="搜索邮箱、姓名、手机号"
+              placeholder="搜索用户名、姓名、手机号"
               prefix={<SearchOutlined />}
               value={search}
               onChange={(e) => setSearch(e.target.value)}

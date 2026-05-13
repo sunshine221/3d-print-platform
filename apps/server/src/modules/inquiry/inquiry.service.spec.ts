@@ -52,7 +52,7 @@ function mockInquiry(overrides: Record<string, unknown> = {}) {
     adminQuoteAt: null,
     createdAt: new Date(),
     updatedAt: new Date(),
-    user: { email: 'a@b.com', name: '张三' },
+    user: { phone: '13800001111', name: '张三' },
     files: [],
     messages: [],
     logs: [],

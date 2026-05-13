@@ -1,49 +1,22 @@
 'use client';
 
-import { useState, FormEvent, useEffect, useRef } from 'react';
+import { useState, FormEvent } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/hooks/useAuth';
-import { sendCode } from '@/lib/api';
 
 export default function RegisterPage() {
   const { register, isLoggedIn, isLoading } = useAuth();
 
-  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [code, setCode] = useState('');
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
-  const [codeCountdown, setCodeCountdown] = useState(0);
-  const timerRef = useRef<ReturnType<typeof setInterval>>();
-
-  useEffect(() => {
-    return () => { if (timerRef.current) clearInterval(timerRef.current); };
-  }, []);
 
   if (isLoggedIn && !isLoading) {
     window.location.href = '/account';
     return null;
   }
-
-  const handleSendCode = async () => {
-    if (codeCountdown > 0) return;
-    try {
-      await sendCode(email);
-      setCodeCountdown(60);
-      timerRef.current = setInterval(() => {
-        setCodeCountdown((prev) => {
-          if (prev <= 1) {
-            if (timerRef.current) clearInterval(timerRef.current);
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-    } catch (err: any) {
-      setError(err.message || '发送验证码失败');
-    }
-  };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -56,7 +29,7 @@ export default function RegisterPage() {
 
     setSubmitting(true);
     try {
-      await register({ email, password, code, name: email.split('@')[0] });
+      await register({ phone, password, confirmPassword });
       window.location.href = '/account';
     } catch (err: any) {
       setError(err.message || '注册失败');
@@ -70,14 +43,14 @@ export default function RegisterPage() {
       <h1 className="text-2xl font-bold text-center mb-8">注册</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">邮箱</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">手机号</label>
           <input
-            type="email"
+            type="tel"
             required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="your@email.com"
+            placeholder="请输入11位手机号"
           />
         </div>
         <div>
@@ -103,27 +76,6 @@ export default function RegisterPage() {
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="再次输入密码"
           />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">验证码</label>
-          <div className="flex gap-2">
-            <input
-              type="text"
-              required
-              value={code}
-              onChange={(e) => setCode(e.target.value)}
-              className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="4位验证码"
-            />
-            <button
-              type="button"
-              onClick={handleSendCode}
-              disabled={codeCountdown > 0 || !email}
-              className="px-4 py-2 text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 disabled:bg-gray-50 disabled:text-gray-400 whitespace-nowrap transition-colors"
-            >
-              {codeCountdown > 0 ? `${codeCountdown}s` : '发送验证码'}
-            </button>
-          </div>
         </div>
         {error && (
           <p className="text-red-500 text-sm">{error}</p>

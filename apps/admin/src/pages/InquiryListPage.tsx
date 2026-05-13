@@ -41,7 +41,7 @@ export default function InquiryListPage() {
     { title: '询价单号', dataIndex: 'inquiryNo', key: 'inquiryNo', width: 180 },
     {
       title: '用户', key: 'user', width: 180,
-      render: (_: any, r: any) => r.user?.email || '-',
+      render: (_: any, r: any) => r.user?.phone || '-',
     },
     {
       title: '关联产品', dataIndex: 'productName', key: 'productName', width: 150,

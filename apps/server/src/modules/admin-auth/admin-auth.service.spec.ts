@@ -40,16 +40,16 @@ describe('AdminAuthService', () => {
   });
 
   describe('login', () => {
-    const dto = { email: 'admin@ymbj.online', password: 'admin123' };
+    const dto = { account: 'admin', password: 'admin' };
 
-    it('应邮箱不存在抛出 UnauthorizedException', async () => {
+    it('应账号不存在抛出 UnauthorizedException', async () => {
       mockPrisma.adminUser.findUnique.mockResolvedValue(null);
       await expect(service.login(dto)).rejects.toThrow(UnauthorizedException);
     });
 
     it('应账号禁用抛出 UnauthorizedException', async () => {
       mockPrisma.adminUser.findUnique.mockResolvedValue({
-        id: 'a', email: 'admin@ymbj.online', passwordHash: 'h', status: 'disabled',
+        id: 'a', username: 'admin', passwordHash: 'h', status: 'disabled',
         role: { slug: 'admin' }, name: 'A',
       });
       await expect(service.login(dto)).rejects.toThrow('账号已被禁用');
@@ -57,7 +57,7 @@ describe('AdminAuthService', () => {
 
     it('应密码错误抛出 UnauthorizedException', async () => {
       mockPrisma.adminUser.findUnique.mockResolvedValue({
-        id: 'a', email: 'admin@ymbj.online', passwordHash: 'h', status: 'active',
+        id: 'a', username: 'admin', passwordHash: 'h', status: 'active',
         role: { slug: 'admin' }, name: 'A',
       });
       (bcrypt.compare as jest.Mock).mockResolvedValue(false);
@@ -66,7 +66,7 @@ describe('AdminAuthService', () => {
 
     it('应成功登录返回 token 和用户信息', async () => {
       mockPrisma.adminUser.findUnique.mockResolvedValue({
-        id: 'a', email: 'admin@ymbj.online', passwordHash: 'h', status: 'active',
+        id: 'a', username: 'admin', passwordHash: 'h', status: 'active',
         role: { slug: 'admin' }, name: 'Admin',
       });
       (bcrypt.compare as jest.Mock).mockResolvedValue(true);
@@ -92,7 +92,7 @@ describe('AdminAuthService', () => {
       });
       mockPrisma.refreshToken.delete.mockResolvedValue({});
       mockPrisma.adminUser.findUnique.mockResolvedValue({
-        id: 'a', email: 'admin@ymbj.online', status: 'active',
+        id: 'a', username: 'admin', status: 'active',
         role: { slug: 'admin' }, name: 'A',
       });
       mockPrisma.refreshToken.create.mockResolvedValue({});
@@ -113,7 +113,7 @@ describe('AdminAuthService', () => {
   describe('getMe', () => {
     it('应返回管理员信息含权限', async () => {
       mockPrisma.adminUser.findUnique.mockResolvedValue({
-        id: 'a', email: 'admin@ymbj.online', name: 'Admin', avatarUrl: null,
+        id: 'a', username: 'admin', name: 'Admin', avatarUrl: null,
         role: { slug: 'admin', permissions: ['all'] },
       });
       const result = await service.getMe('a');

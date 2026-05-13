@@ -22,7 +22,7 @@ export class LogController {
         orderBy: { createdAt: 'desc' },
         skip: ((page || 1) - 1) * (pageSize || 20),
         take: pageSize || 20,
-        include: { adminUser: { select: { email: true, name: true } } },
+        include: { adminUser: { select: { username: true, name: true } } },
       }),
       prisma.operationLog.count({ where }),
     ]);

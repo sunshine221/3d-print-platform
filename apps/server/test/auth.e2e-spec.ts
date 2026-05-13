@@ -9,7 +9,6 @@ let mockPrisma: any;
 jest.mock('@prisma/client', () => {
   mockPrisma = {
     user: { findUnique: jest.fn(), create: jest.fn(), update: jest.fn() },
-    verificationCode: { findFirst: jest.fn(), create: jest.fn(), update: jest.fn() },
     refreshToken: { findUnique: jest.fn(), create: jest.fn(), delete: jest.fn(), deleteMany: jest.fn() },
   };
   return { PrismaClient: jest.fn(() => mockPrisma) };
@@ -49,7 +48,7 @@ describe('AuthController (e2e)', () => {
       .useValue({
         canActivate: (context: any) => {
           const req = context.switchToHttp().getRequest();
-          req.user = { id: 'test-user-id', email: 'test@test.com' };
+          req.user = { id: 'test-user-id', phone: '13800001111' };
           return true;
         },
       })
@@ -75,72 +74,90 @@ describe('AuthController (e2e)', () => {
     it('应参数不全时返回 400', async () => {
       const res = await request(app.getHttpServer())
         .post('/api/v1/auth/register')
-        .send({ email: 'test@test.com' });
+        .send({ phone: '13800001111' });
       expect(res.status).toBe(400);
     });
 
     it('应成功注册时返回 201', async () => {
-      mockPrisma.verificationCode.findFirst.mockResolvedValue({
-        id: 'code-id', email: 'test@test.com', code: '1234', type: 'register',
-        used: false, expiresAt: new Date(Date.now() + 10 * 60 * 1000),
-      });
       mockPrisma.user.findUnique.mockResolvedValue(null);
-      mockPrisma.user.create.mockResolvedValue({ id: 'new-id', email: 'test@test.com' });
-      mockPrisma.verificationCode.update.mockResolvedValue({});
+      mockPrisma.user.create.mockResolvedValue({
+        id: 'new-id', phone: '13800001111', username: 'user_a1b2c3',
+      });
+      mockPrisma.refreshToken.create.mockResolvedValue({});
 
       const res = await request(app.getHttpServer())
         .post('/api/v1/auth/register')
-        .send({ email: 'test@test.com', password: 'password123', code: '1234' });
+        .send({
+          phone: '13800001111',
+          password: 'password123',
+          confirmPassword: 'password123',
+        });
 
       expect(res.status).toBe(201);
       expect(res.body).toHaveProperty('accessToken');
+      expect(res.body).toHaveProperty('user');
     });
   });
 
   describe('POST /api/v1/auth/login', () => {
-    it('应成功登录时返回 200', async () => {
+    it('应用手机号登录返回 200', async () => {
       mockPrisma.user.findUnique.mockResolvedValue({
-        id: 'user-id', email: 'test@test.com', passwordHash: 'hash', status: 'active',
+        id: 'user-id', phone: '13800001111', passwordHash: 'hash', status: 'active',
       });
       mockPrisma.refreshToken.create.mockResolvedValue({});
 
       const res = await request(app.getHttpServer())
         .post('/api/v1/auth/login')
-        .send({ email: 'test@test.com', password: 'password123' });
+        .send({ account: '13800001111', password: 'password123' });
+
+      expect(res.status).toBe(200);
+      expect(res.body).toHaveProperty('accessToken');
+    });
+
+    it('应用 username 登录返回 200', async () => {
+      mockPrisma.user.findUnique.mockResolvedValue({
+        id: 'user-id', phone: '13800001111', passwordHash: 'hash', status: 'active',
+      });
+      mockPrisma.refreshToken.create.mockResolvedValue({});
+
+      const res = await request(app.getHttpServer())
+        .post('/api/v1/auth/login')
+        .send({ account: 'user_a1b2c3', password: 'password123' });
 
       expect(res.status).toBe(200);
       expect(res.body).toHaveProperty('accessToken');
     });
   });
 
-  describe('POST /api/v1/auth/send-code', () => {
-    it('应成功发送验证码', async () => {
-      mockPrisma.verificationCode.create.mockResolvedValue({});
+  describe('POST /api/v1/auth/forgot-password', () => {
+    it('应返回提示信息', async () => {
       const res = await request(app.getHttpServer())
-        .post('/api/v1/auth/send-code')
-        .send({ email: 'test@test.com' });
+        .post('/api/v1/auth/forgot-password')
+        .send({ phone: '13800001111' });
 
       expect(res.status).toBe(200);
-      expect(res.body.message).toBe('验证码已发送');
     });
   });
 
-  describe('POST /api/v1/auth/forgot-password', () => {
-    it('应防止账号枚举（未注册也返回成功）', async () => {
-      mockPrisma.user.findUnique.mockResolvedValue(null);
+  describe('POST /api/v1/auth/reset-password', () => {
+    it('应成功重置密码', async () => {
+      mockPrisma.user.findUnique.mockResolvedValue({ id: 'u', phone: '13800001111' });
+      mockPrisma.user.update.mockResolvedValue({});
+
       const res = await request(app.getHttpServer())
-        .post('/api/v1/auth/forgot-password')
-        .send({ email: 'no@test.com' });
+        .post('/api/v1/auth/reset-password')
+        .send({ phone: '13800001111', newPassword: 'new123456' });
 
       expect(res.status).toBe(200);
-      expect(res.body.message).toContain('如该邮箱已注册');
+      expect(res.body.message).toBe('密码重置成功');
     });
   });
 
   describe('GET /api/v1/auth/me', () => {
     it('应返回当前用户信息', async () => {
       mockPrisma.user.findUnique.mockResolvedValue({
-        id: 'test-user-id', email: 'test@test.com', name: 'Test', phone: null, avatarUrl: null,
+        id: 'test-user-id', phone: '13800001111', username: 'user_a1b2c3',
+        name: 'Test', email: null, avatarUrl: null,
       });
 
       const res = await request(app.getHttpServer()).get('/api/v1/auth/me');

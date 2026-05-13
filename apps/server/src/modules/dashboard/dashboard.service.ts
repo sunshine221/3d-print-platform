@@ -34,7 +34,7 @@ export class DashboardService {
     return prisma.order.findMany({
       orderBy: { createdAt: 'desc' },
       take: 10,
-      include: { user: { select: { email: true, name: true } } },
+      include: { user: { select: { phone: true, name: true } } },
     });
   }
 
@@ -42,7 +42,7 @@ export class DashboardService {
     return prisma.printServiceInquiry.findMany({
       orderBy: { createdAt: 'desc' },
       take: 10,
-      include: { user: { select: { email: true, name: true } } },
+      include: { user: { select: { phone: true, name: true } } },
     });
   }
 }

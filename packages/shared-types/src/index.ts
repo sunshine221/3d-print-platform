@@ -50,19 +50,23 @@ export type UserStatus = 'active' | 'disabled';
 export type FileType = 'image' | 'model_3d' | 'model_upload' | 'other';
 export type SenderType = 'customer' | 'admin';
 export type OperatorType = 'customer' | 'admin' | 'system';
-export type CodeType = 'register' | 'reset_password';
 
 // ===== 认证 =====
 export interface LoginRequest {
-  email: string;
+  account: string;
   password: string;
 }
 
 export interface RegisterRequest {
-  email: string;
+  phone: string;
   password: string;
+  confirmPassword: string;
   name?: string;
-  code: string;
+}
+
+export interface AdminLoginRequest {
+  account: string;
+  password: string;
 }
 
 export interface TokenPair {
@@ -73,18 +77,18 @@ export interface TokenPair {
 
 export interface AuthUser {
   id: string;
-  email: string;
+  username: string;
+  phone: string;
   name: string | null;
-  phone: string | null;
   avatarUrl: string | null;
 }
 
 // ===== 用户 =====
 export interface UserProfile {
   id: string;
-  email: string;
+  username: string;
+  phone: string;
   name: string | null;
-  phone: string | null;
   avatarUrl: string | null;
   defaultContactName: string | null;
   defaultContactPhone: string | null;
@@ -95,7 +99,6 @@ export interface UserProfile {
 
 export interface UpdateProfileRequest {
   name?: string;
-  phone?: string;
   avatarUrl?: string;
   defaultContactName?: string;
   defaultContactPhone?: string;

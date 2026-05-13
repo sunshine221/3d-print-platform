@@ -7,7 +7,6 @@ import {
   RegisterDto,
   LoginDto,
   RefreshDto,
-  SendCodeDto,
   ForgotPasswordDto,
   ResetPasswordDto,
   ChangePasswordDto,
@@ -49,17 +48,10 @@ export class AuthController {
   }
 
   @Public()
-  @Post('send-code')
-  @HttpCode(200)
-  sendCode(@Body() dto: SendCodeDto) {
-    return this.authService.sendCode(dto.email);
-  }
-
-  @Public()
   @Post('forgot-password')
   @HttpCode(200)
   forgotPassword(@Body() dto: ForgotPasswordDto) {
-    return this.authService.forgotPassword(dto.email);
+    return this.authService.forgotPassword(dto.phone);
   }
 
   @Public()
@@ -86,7 +78,6 @@ export class AuthController {
       where: { id: user.id },
       data: {
         name: dto.name,
-        phone: dto.phone,
         avatarUrl: dto.avatarUrl,
         defaultContactName: dto.defaultContactName,
         defaultContactPhone: dto.defaultContactPhone,
@@ -96,9 +87,9 @@ export class AuthController {
 
     return {
       id: updated.id,
-      email: updated.email,
-      name: updated.name,
+      username: updated.username,
       phone: updated.phone,
+      name: updated.name,
       avatarUrl: updated.avatarUrl,
     };
   }

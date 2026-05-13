@@ -6,9 +6,9 @@ import api from '../services/api';
 
 interface UserDetail {
   id: string;
-  email: string;
+  username: string;
   name: string | null;
-  phone: string | null;
+  phone: string;
   defaultContactName: string | null;
   defaultContactPhone: string | null;
   defaultAddress: string | null;
@@ -60,7 +60,7 @@ export default function CustomerDetailPage() {
 
       <Card title="基本信息" style={{ marginBottom: 16 }}>
         <Descriptions column={2}>
-          <Descriptions.Item label="邮箱">{user.email}</Descriptions.Item>
+          <Descriptions.Item label="账号">{user.username}</Descriptions.Item>
           <Descriptions.Item label="姓名">{user.name || '-'}</Descriptions.Item>
           <Descriptions.Item label="手机号">{user.phone || '-'}</Descriptions.Item>
           <Descriptions.Item label="状态">

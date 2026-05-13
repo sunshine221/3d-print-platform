@@ -6,7 +6,7 @@ import axios from 'axios';
 export default function LoginPage() {
   const [loading, setLoading] = useState(false);
 
-  const onFinish = async (values: { email: string; password: string }) => {
+  const onFinish = async (values: { account: string; password: string }) => {
     setLoading(true);
     try {
       const res = await axios.post('/api/v1/admin/auth/login', values);
@@ -94,10 +94,10 @@ export default function LoginPage() {
         </div>
 
         <Form onFinish={onFinish} size="large">
-          <Form.Item name="email" rules={[{ required: true, message: '请输入管理员邮箱' }]}>
+          <Form.Item name="account" rules={[{ required: true, message: '请输入管理员账号' }]}>
             <Input
               prefix={<UserOutlined style={{ color: '#9ca3af' }} />}
-              placeholder="管理员邮箱"
+              placeholder="管理员账号"
               style={{ borderRadius: 10 }}
             />
           </Form.Item>

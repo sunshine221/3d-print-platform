@@ -35,6 +35,7 @@ export default function Header() {
 
         <nav className="flex items-center gap-1 text-sm">
           {[
+            { href: '/', label: '首页' },
             { href: '/products', label: '产品浏览' },
             { href: '/materials', label: '材料介绍' },
             { href: '/guide', label: '打印指南' },
@@ -58,10 +59,10 @@ export default function Header() {
                 className="flex items-center gap-2 px-2 py-1.5 rounded-full hover:bg-gray-100 transition-colors"
               >
                 <span className="w-7 h-7 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 text-white flex items-center justify-center text-xs font-medium shadow-sm">
-                  {((user?.name ?? user?.email ?? '?')[0] ?? '?').toUpperCase()}
+                  {((user?.name ?? user?.username ?? '?')[0] ?? '?').toUpperCase()}
                 </span>
                 <span className="hidden md:inline text-sm font-medium text-gray-700">
-                  {user?.name || user?.email}
+                  {user?.name || user?.username}
                 </span>
               </button>
               {menuOpen && (

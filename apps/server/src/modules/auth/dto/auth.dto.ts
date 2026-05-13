@@ -1,8 +1,9 @@
-import { IsEmail, IsString, MinLength, IsOptional, MaxLength } from 'class-validator';
+import { IsString, MinLength, IsOptional, MaxLength, Matches } from 'class-validator';
 
 export class RegisterDto {
-  @IsEmail()
-  email: string;
+  @IsString()
+  @Matches(/^1[3-9]\d{9}$/, { message: '手机号格式不正确' })
+  phone: string;
 
   @IsString()
   @MinLength(6)
@@ -10,8 +11,7 @@ export class RegisterDto {
   password: string;
 
   @IsString()
-  @MinLength(4)
-  code: string;
+  confirmPassword: string;
 
   @IsOptional()
   @IsString()
@@ -20,8 +20,8 @@ export class RegisterDto {
 }
 
 export class LoginDto {
-  @IsEmail()
-  email: string;
+  @IsString()
+  account: string;
 
   @IsString()
   password: string;
@@ -32,23 +32,16 @@ export class RefreshDto {
   refreshToken: string;
 }
 
-export class SendCodeDto {
-  @IsEmail()
-  email: string;
-}
-
 export class ForgotPasswordDto {
-  @IsEmail()
-  email: string;
+  @IsString()
+  @Matches(/^1[3-9]\d{9}$/, { message: '手机号格式不正确' })
+  phone: string;
 }
 
 export class ResetPasswordDto {
-  @IsEmail()
-  email: string;
-
   @IsString()
-  @MinLength(4)
-  code: string;
+  @Matches(/^1[3-9]\d{9}$/, { message: '手机号格式不正确' })
+  phone: string;
 
   @IsString()
   @MinLength(6)

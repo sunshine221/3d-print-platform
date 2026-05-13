@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, FormEvent } from 'react';
+import { Suspense, useState, useEffect, FormEvent } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import useSWR from 'swr';
 import { getProductBySlug, createOrder } from '@/lib/api';
@@ -8,7 +8,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { PriceDisplay } from '@3d-print/ui';
 import Loading from '@/components/ui/Loading';
 
-export default function OrderConfirmPage() {
+function ConfirmForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { user, isLoggedIn, isLoading: authLoading } = useAuth();
@@ -167,5 +167,13 @@ export default function OrderConfirmPage() {
         </button>
       </form>
     </div>
+  );
+}
+
+export default function OrderConfirmPage() {
+  return (
+    <Suspense fallback={<Loading />}>
+      <ConfirmForm />
+    </Suspense>
   );
 }

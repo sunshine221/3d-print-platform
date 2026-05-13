@@ -71,22 +71,17 @@ enum OperatorType {
   system
 }
 
-enum CodeType {
-  register
-  reset_password
-}
 
 model User {
   id                  String   @id @default(uuid())
-  email               String   @unique
+  username            String   @unique
+  phone               String   @unique
   passwordHash        String   @map("password_hash")
   name                String?
-  phone               String?
   avatarUrl           String?  @map("avatar_url")
   defaultContactName  String?  @map("default_contact_name")
   defaultContactPhone String?  @map("default_contact_phone")
   defaultAddress      String?  @map("default_address") @db.Text
-  emailVerified       Boolean  @default(false) @map("email_verified")
   status              UserStatus @default(active)
   createdAt           DateTime @default(now()) @map("created_at")
   updatedAt           DateTime @updatedAt @map("updated_at")
@@ -103,7 +98,7 @@ model User {
 
 model AdminUser {
   id           String   @id @default(uuid())
-  email        String   @unique
+  username     String   @unique
   passwordHash String   @map("password_hash")
   name         String
   avatarUrl    String?  @map("avatar_url")
@@ -146,19 +141,6 @@ model RefreshToken {
   adminUser AdminUser? @relation(fields: [adminUserId], references: [id])
 
   @@map("refresh_tokens")
-}
-
-model VerificationCode {
-  id        String    @id @default(uuid())
-  email     String
-  code      String
-  type      CodeType
-  expiresAt DateTime  @map("expires_at")
-  used      Boolean   @default(false)
-  createdAt DateTime  @default(now()) @map("created_at")
-
-  @@index([email, type])
-  @@map("verification_codes")
 }
 
 model Category {

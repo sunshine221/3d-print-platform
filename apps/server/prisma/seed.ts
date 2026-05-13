@@ -44,19 +44,33 @@ async function main() {
   console.log(`Roles: ${adminRole.slug}, ${editorRole.slug}`);
 
   // 2. 管理员
-  const passwordHash = await bcrypt.hash('admin123', 10);
+  const adminPasswordHash = await bcrypt.hash('admin', 10);
   await prisma.adminUser.upsert({
-    where: { email: 'admin@ymbj.online' },
+    where: { username: 'admin' },
     update: {},
     create: {
-      email: 'admin@ymbj.online',
-      passwordHash,
+      username: 'admin',
+      passwordHash: adminPasswordHash,
       name: '系统管理员',
       roleId: adminRole.id,
     },
   });
 
-  console.log('Admin: admin@ymbj.online / admin123');
+  console.log('Admin: admin / admin');
+
+  const testUserPasswordHash = await bcrypt.hash('123456', 10);
+  await prisma.user.upsert({
+    where: { phone: '13800000001' },
+    update: {},
+    create: {
+      phone: '13800000001',
+      username: 'test_user',
+      passwordHash: testUserPasswordHash,
+      name: '测试用户',
+    },
+  });
+
+  console.log('Test user: 13800000001 / 123456 (username: test_user)');
 
   // 3. 示例分类
   const catData = [

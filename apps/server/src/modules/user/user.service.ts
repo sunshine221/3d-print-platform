@@ -9,7 +9,7 @@ export class UserService {
     const where: any = {};
     if (query.search) {
       where.OR = [
-        { email: { contains: query.search } },
+        { username: { contains: query.search } },
         { name: { contains: query.search } },
         { phone: { contains: query.search } },
       ];
@@ -22,9 +22,9 @@ export class UserService {
         take: query.pageSize,
         select: {
           id: true,
-          email: true,
-          name: true,
+          username: true,
           phone: true,
+          name: true,
           status: true,
           createdAt: true,
           _count: { select: { orders: true, inquiries: true } },
@@ -48,9 +48,9 @@ export class UserService {
       where: { id },
       select: {
         id: true,
-        email: true,
-        name: true,
+        username: true,
         phone: true,
+        name: true,
         avatarUrl: true,
         defaultContactName: true,
         defaultContactPhone: true,
@@ -72,7 +72,7 @@ export class UserService {
     return prisma.user.update({
       where: { id },
       data: { status: newStatus },
-      select: { id: true, email: true, name: true, status: true },
+      select: { id: true, username: true, phone: true, name: true, status: true },
     });
   }
 }

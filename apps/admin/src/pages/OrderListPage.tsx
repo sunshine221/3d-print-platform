@@ -48,7 +48,7 @@ export default function OrderListPage() {
     { title: '订单号', dataIndex: 'orderNo', key: 'orderNo', width: 180 },
     {
       title: '用户', key: 'user', width: 180,
-      render: (_: any, r: any) => r.user?.email || '-',
+      render: (_: any, r: any) => r.user?.phone || '-',
     },
     {
       title: '金额', dataIndex: 'totalPrice', key: 'totalPrice', width: 100,

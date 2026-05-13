@@ -8,7 +8,6 @@ export default function ProfilePage() {
   const { user, isLoading } = useAuth();
 
   const [name, setName] = useState('');
-  const [phone, setPhone] = useState('');
   const [contactName, setContactName] = useState('');
   const [contactPhone, setContactPhone] = useState('');
   const [address, setAddress] = useState('');
@@ -31,7 +30,7 @@ export default function ProfilePage() {
     setProfileSaving(true);
     setProfileMsg('');
     try {
-      await updateMe({ name, phone: phone || undefined, defaultContactName: contactName, defaultContactPhone: contactPhone, defaultAddress: address });
+      await updateMe({ name, defaultContactName: contactName, defaultContactPhone: contactPhone, defaultAddress: address });
       setProfileMsg('保存成功');
     } catch (err: any) {
       setProfileMsg(err.message || '保存失败');
@@ -64,15 +63,6 @@ export default function ProfilePage() {
         <h2 className="text-lg font-semibold mb-4">基本信息</h2>
         <form onSubmit={handleProfileSubmit} className="space-y-4 max-w-md">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">邮箱</label>
-            <input
-              type="email"
-              value={user?.email || ''}
-              disabled
-              className="w-full px-3 py-2 border border-gray-200 rounded-lg bg-gray-50 text-gray-500"
-            />
-          </div>
-          <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">昵称</label>
             <input
               type="text"
@@ -85,9 +75,9 @@ export default function ProfilePage() {
             <label className="block text-sm font-medium text-gray-700 mb-1">手机号</label>
             <input
               type="text"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              value={user?.phone || ''}
+              disabled
+              className="w-full px-3 py-2 border border-gray-200 rounded-lg bg-gray-50 text-gray-500"
             />
           </div>
           {profileMsg && (

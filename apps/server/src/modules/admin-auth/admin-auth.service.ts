@@ -15,7 +15,7 @@ const prisma = new PrismaClient();
 export class AdminAuthService {
   constructor(private jwtService: JwtService) {}
 
-  private generateTokenPair(payload: { sub: string; email: string; roleId: string }): TokenPair {
+  private generateTokenPair(payload: { sub: string; username: string; roleId: string }): TokenPair {
     const accessToken = this.jwtService.sign(payload, {
       secret: process.env.JWT_ADMIN_SECRET || 'dev-admin-secret',
       expiresIn: '15m',
@@ -29,16 +29,16 @@ export class AdminAuthService {
 
   async login(dto: AdminLoginDto) {
     const user = await prisma.adminUser.findUnique({
-      where: { email: dto.email },
+      where: { username: dto.account },
       include: { role: true },
     });
-    if (!user) throw new UnauthorizedException('邮箱或密码错误');
+    if (!user) throw new UnauthorizedException('账号或密码错误');
     if (user.status === 'disabled') throw new UnauthorizedException('账号已被禁用');
 
     const valid = await bcrypt.compare(dto.password, user.passwordHash);
-    if (!valid) throw new UnauthorizedException('邮箱或密码错误');
+    if (!valid) throw new UnauthorizedException('账号或密码错误');
 
-    const tokens = this.generateTokenPair({ sub: user.id, email: user.email, roleId: user.roleId });
+    const tokens = this.generateTokenPair({ sub: user.id, username: user.username, roleId: user.roleId });
 
     const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
     await prisma.refreshToken.create({
@@ -52,7 +52,7 @@ export class AdminAuthService {
 
     return {
       ...tokens,
-      user: { id: user.id, email: user.email, name: user.name, role: user.role.slug },
+      user: { id: user.id, username: user.username, name: user.name, role: user.role.slug },
     };
   }
 
@@ -72,7 +72,7 @@ export class AdminAuthService {
       throw new UnauthorizedException('用户不可用');
     }
 
-    const tokens = this.generateTokenPair({ sub: user.id, email: user.email, roleId: user.roleId });
+    const tokens = this.generateTokenPair({ sub: user.id, username: user.username, roleId: user.roleId });
 
     const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
     await prisma.refreshToken.create({
@@ -81,7 +81,7 @@ export class AdminAuthService {
 
     return {
       ...tokens,
-      user: { id: user.id, email: user.email, name: user.name, role: user.role.slug },
+      user: { id: user.id, username: user.username, name: user.name, role: user.role.slug },
     };
   }
 
@@ -98,7 +98,7 @@ export class AdminAuthService {
     if (!user) throw new UnauthorizedException();
     return {
       id: user.id,
-      email: user.email,
+      username: user.username,
       name: user.name,
       avatarUrl: user.avatarUrl,
       role: user.role.slug,

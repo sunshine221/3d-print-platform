@@ -1,21 +1,20 @@
 'use client';
 
-import { useState, FormEvent } from 'react';
+import { Suspense, useState, FormEvent } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 
-export default function LoginPage() {
+function LoginForm() {
   const searchParams = useSearchParams();
   const redirect = searchParams.get('redirect') || '/account';
   const { login, isLoggedIn, isLoading } = useAuth();
 
-  const [email, setEmail] = useState('');
+  const [account, setAccount] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
-  // 已登录则跳转
   if (isLoggedIn && !isLoading) {
     window.location.href = redirect;
     return null;
@@ -26,7 +25,7 @@ export default function LoginPage() {
     setError('');
     setSubmitting(true);
     try {
-      await login({ email, password });
+      await login({ account, password });
       window.location.href = redirect;
     } catch (err: any) {
       setError(err.message || '登录失败');
@@ -40,14 +39,14 @@ export default function LoginPage() {
       <h1 className="text-2xl font-bold text-center mb-8">登录</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">邮箱</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">手机号/账号</label>
           <input
-            type="email"
+            type="text"
             required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={account}
+            onChange={(e) => setAccount(e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="your@email.com"
+            placeholder="请输入手机号或账号"
           />
         </div>
         <div>
@@ -81,5 +80,13 @@ export default function LoginPage() {
         </p>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="text-center py-16">加载中...</div>}>
+      <LoginForm />
+    </Suspense>
   );
 }

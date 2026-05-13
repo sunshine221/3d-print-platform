@@ -1,5 +1,6 @@
 'use client';
 
+import { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useProducts } from '@/hooks/useProducts';
 import FilterSidebar from '@/components/filter/FilterSidebar';
@@ -9,7 +10,7 @@ import Pagination from '@/components/ui/Pagination';
 import Breadcrumb from '@/components/ui/Breadcrumb';
 import Loading from '@/components/ui/Loading';
 
-export default function ProductsPage() {
+function ProductList() {
   const searchParams = useSearchParams();
   const query = {
     page: Number(searchParams.get('page')) || 1,
@@ -56,5 +57,13 @@ export default function ProductsPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function ProductsPage() {
+  return (
+    <Suspense fallback={<Loading />}>
+      <ProductList />
+    </Suspense>
   );
 }
