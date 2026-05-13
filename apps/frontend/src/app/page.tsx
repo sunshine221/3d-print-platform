@@ -18,7 +18,9 @@ export default function HomePage() {
     pageSize: 8,
   });
 
-  const topCategories = categories.slice(0, 4);
+  const topCategories = [...categories]
+    .sort((a, b) => (b.sortOrder ?? 0) - (a.sortOrder ?? 0))
+    .slice(0, 4);
 
   return (
     <div className="animate-fade-in">

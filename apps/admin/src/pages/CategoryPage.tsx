@@ -124,36 +124,27 @@ export default function CategoryPage() {
     }
   };
 
-  const moveUp = async (record: CategoryNode) => {
-    const siblings = findSiblings(categories, record.parentId);
+  const moveCategory = async (record: CategoryNode, direction: 'up' | 'down') => {
+    const siblings = findSiblings(categories, record.parentId).sort(
+      (a, b) => (b.sortOrder ?? 0) - (a.sortOrder ?? 0),
+    );
     const idx = siblings.findIndex((s) => s.id === record.id);
-    if (idx <= 0) return;
-    const prev = siblings[idx - 1];
-    if (!prev) return;
+    if (idx < 0) return;
+    const other = direction === 'up' ? siblings[idx - 1] : siblings[idx + 1];
+    if (!other) return;
     try {
-      const items = [
-        { id: record.id, sortOrder: prev.sortOrder },
-        { id: prev.id, sortOrder: record.sortOrder },
-      ];
-      await api.put('/admin/categories/sort/batch', items);
-      fetchCategories();
-    } catch {
-      // 错误已在拦截器中处理
-    }
-  };
-
-  const moveDown = async (record: CategoryNode) => {
-    const siblings = findSiblings(categories, record.parentId);
-    const idx = siblings.findIndex((s) => s.id === record.id);
-    if (idx < 0 || idx >= siblings.length - 1) return;
-    const next = siblings[idx + 1];
-    if (!next) return;
-    try {
-      const items = [
-        { id: record.id, sortOrder: next.sortOrder },
-        { id: next.id, sortOrder: record.sortOrder },
-      ];
-      await api.put('/admin/categories/sort/batch', items);
+      if (record.sortOrder === other.sortOrder) {
+        // 同值：上移当前+1，下移邻居+1
+        const id = direction === 'up' ? record.id : other.id;
+        const newOrder = (direction === 'up' ? record.sortOrder : other.sortOrder) + 1;
+        await api.put('/admin/categories/sort/batch', [{ id, sortOrder: newOrder }]);
+      } else {
+        // 不同值：交换 sortOrder
+        await api.put('/admin/categories/sort/batch', [
+          { id: record.id, sortOrder: other.sortOrder },
+          { id: other.id, sortOrder: record.sortOrder },
+        ]);
+      }
       fetchCategories();
     } catch {
       // 错误已在拦截器中处理
@@ -216,12 +207,12 @@ export default function CategoryPage() {
           <Button
             size="small"
             icon={<ArrowUpOutlined />}
-            onClick={() => moveUp(record)}
+            onClick={() => moveCategory(record, 'up')}
           />
           <Button
             size="small"
             icon={<ArrowDownOutlined />}
-            onClick={() => moveDown(record)}
+            onClick={() => moveCategory(record, 'down')}
           />
           <Popconfirm
             title="确定删除此分类？"

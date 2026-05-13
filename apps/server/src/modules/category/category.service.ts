@@ -12,14 +12,14 @@ export class CategoryService {
   async getTree(): Promise<CategoryNode[]> {
     const all = await prisma.category.findMany({
       where: { isVisible: true },
-      orderBy: { sortOrder: 'asc' },
+      orderBy: { sortOrder: 'desc' },
     });
     return this.buildTree(all);
   }
 
   async getAdminTree(): Promise<CategoryNode[]> {
     const all = await prisma.category.findMany({
-      orderBy: { sortOrder: 'asc' },
+      orderBy: { sortOrder: 'desc' },
     });
     return this.buildTree(all);
   }
@@ -60,7 +60,7 @@ export class CategoryService {
     const category = await prisma.category.findUnique({
       where: { id },
       include: {
-        children: { orderBy: { sortOrder: 'asc' } },
+        children: { orderBy: { sortOrder: 'desc' } },
         products: { select: { productId: true } },
       },
     });
@@ -75,7 +75,7 @@ export class CategoryService {
     const category = await prisma.category.findUnique({
       where: { slug },
       include: {
-        children: { orderBy: { sortOrder: 'asc' } },
+        children: { orderBy: { sortOrder: 'desc' } },
         products: { select: { productId: true } },
       },
     });
