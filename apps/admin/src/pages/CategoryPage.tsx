@@ -1,6 +1,11 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Table, Button, Modal, Form, Input, InputNumber, Select, Switch, Space, Popconfirm, message } from 'antd';
-import { PlusOutlined, EditOutlined, DeleteOutlined, ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
+import {
+  Table, Button, Modal, Form, Input, InputNumber, Select, Switch, Space, Popconfirm, message, Upload,
+} from 'antd';
+import {
+  PlusOutlined, EditOutlined, DeleteOutlined, ArrowUpOutlined, ArrowDownOutlined, UploadOutlined,
+} from '@ant-design/icons';
+import type { UploadFile } from 'antd/es/upload/interface';
 import api from '../services/api';
 
 interface CategoryNode {
@@ -16,12 +21,17 @@ interface CategoryNode {
   children: CategoryNode[];
 }
 
+const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
+const MAX_SIZE = 5 * 1024 * 1024; // 5MB
+
 export default function CategoryPage() {
   const [categories, setCategories] = useState<CategoryNode[]>([]);
   const [loading, setLoading] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState<CategoryNode | null>(null);
   const [form] = Form.useForm();
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
+  const [uploading, setUploading] = useState(false);
 
   const fetchCategories = useCallback(async () => {
     setLoading(true);
@@ -41,6 +51,7 @@ export default function CategoryPage() {
     setEditing(null);
     form.resetFields();
     if (parentId) form.setFieldsValue({ parentId });
+    setFileList([]);
     setModalOpen(true);
   };
 
@@ -50,29 +61,56 @@ export default function CategoryPage() {
       name: record.name,
       slug: record.slug,
       icon: record.icon,
-      imageUrl: record.imageUrl,
       description: record.description,
       parentId: record.parentId || undefined,
       sortOrder: record.sortOrder,
       isVisible: record.isVisible,
     });
+    setFileList([]);
     setModalOpen(true);
+  };
+
+  const beforeUpload = (file: File) => {
+    if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+      message.error('仅支持 JPG、PNG、WebP 格式');
+      return Upload.LIST_IGNORE;
+    }
+    if (file.size > MAX_SIZE) {
+      message.error('图片大小不能超过 5MB');
+      return Upload.LIST_IGNORE;
+    }
+    setFileList([{ uid: '-1', name: file.name, status: 'done', originFileObj: file as any }]);
+    return false;
   };
 
   const handleSubmit = async () => {
     const values = await form.validateFields();
+    setUploading(true);
     try {
+      const formData = new FormData();
+      for (const [key, val] of Object.entries(values)) {
+        if (val !== undefined && val !== null) {
+          formData.append(key, typeof val === 'boolean' ? String(val) : val as string);
+        }
+      }
+
+      if (fileList.length > 0 && fileList[0]?.originFileObj) {
+        formData.append('file', fileList[0].originFileObj as File);
+      }
+
       if (editing) {
-        await api.put(`/admin/categories/${editing.id}`, values);
+        await api.put(`/admin/categories/${editing.id}`, formData);
         message.success('分类已更新');
       } else {
-        await api.post('/admin/categories', values);
+        await api.post('/admin/categories', formData);
         message.success('分类已创建');
       }
       setModalOpen(false);
       fetchCategories();
     } catch {
       // 错误已在拦截器中处理
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -87,7 +125,6 @@ export default function CategoryPage() {
   };
 
   const moveUp = async (record: CategoryNode) => {
-    // 找到同级上一个节点，交换 sortOrder
     const siblings = findSiblings(categories, record.parentId);
     const idx = siblings.findIndex((s) => s.id === record.id);
     if (idx <= 0) return;
@@ -124,6 +161,15 @@ export default function CategoryPage() {
   };
 
   const columns = [
+    {
+      title: '图片',
+      dataIndex: 'imageUrl',
+      key: 'image',
+      width: 80,
+      render: (url: string | null) => (
+        url ? <img src={url} alt="" style={{ width: 50, height: 50, objectFit: 'cover', borderRadius: 4 }} /> : '-'
+      ),
+    },
     {
       title: '名称',
       dataIndex: 'name',
@@ -212,6 +258,7 @@ export default function CategoryPage() {
         open={modalOpen}
         onOk={handleSubmit}
         onCancel={() => setModalOpen(false)}
+        confirmLoading={uploading}
         width={600}
       >
         <Form form={form} layout="vertical">
@@ -238,11 +285,38 @@ export default function CategoryPage() {
                 .map((c) => ({ value: c.id, label: c.name }))}
             />
           </Form.Item>
+          <Form.Item label="封面图">
+            <Upload
+              listType="picture-card"
+              fileList={fileList}
+              beforeUpload={beforeUpload}
+              onRemove={() => setFileList([])}
+              maxCount={1}
+              accept="image/jpeg,image/png,image/webp"
+            >
+              {fileList.length === 0 && (
+                <div>
+                  <UploadOutlined />
+                  <div style={{ marginTop: 8 }}>上传</div>
+                </div>
+              )}
+            </Upload>
+            {editing?.imageUrl && fileList.length === 0 && (
+              <div style={{ marginTop: 8 }}>
+                <img
+                  src={editing.imageUrl}
+                  alt="当前封面"
+                  style={{ width: 102, height: 102, objectFit: 'cover', borderRadius: 8, border: '1px solid #d9d9d9' }}
+                />
+                <p style={{ color: '#999', fontSize: 12 }}>当前封面（上传新图片将替换）</p>
+              </div>
+            )}
+            {!editing && fileList.length === 0 && (
+              <p style={{ color: '#999', fontSize: 12 }}>支持 JPG/PNG/WebP，最大 5MB</p>
+            )}
+          </Form.Item>
           <Form.Item name="icon" label="图标 URL">
             <Input placeholder="图标图片地址" />
-          </Form.Item>
-          <Form.Item name="imageUrl" label="封面图 URL">
-            <Input placeholder="分类封面图" />
           </Form.Item>
           <Form.Item name="description" label="描述">
             <Input.TextArea rows={2} />

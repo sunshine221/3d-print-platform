@@ -14,8 +14,17 @@ jest.mock('@prisma/client', () => {
   return { PrismaClient: jest.fn(() => mockPrisma) };
 });
 
+const mockMediaService = {
+  uploadFile: jest.fn(),
+};
+
+jest.mock('../media/media.service', () => ({
+  MediaService: jest.fn(() => mockMediaService),
+}));
+
 import { Test, TestingModule } from '@nestjs/testing';
 import { BannerService } from './banner.service';
+import { MediaService } from '../media/media.service';
 import { NotFoundException } from '@nestjs/common';
 
 describe('BannerService', () => {
@@ -24,7 +33,7 @@ describe('BannerService', () => {
   beforeEach(async () => {
     jest.clearAllMocks();
     const module: TestingModule = await Test.createTestingModule({
-      providers: [BannerService],
+      providers: [BannerService, MediaService],
     }).compile();
     service = module.get<BannerService>(BannerService);
   });
@@ -63,10 +72,26 @@ describe('BannerService', () => {
   });
 
   describe('create', () => {
-    it('应创建 Banner', async () => {
-      mockPrisma.banner.create.mockResolvedValue({ id: 'new', title: '新' });
+    it('应使用 URL 创建 Banner', async () => {
+      mockPrisma.banner.create.mockResolvedValue({ id: 'new', title: '新', imageUrl: 'https://a.jpg' });
       const result = await service.create({ imageUrl: 'https://a.jpg', title: '新' });
       expect(result.title).toBe('新');
+      expect(result.imageUrl).toBe('https://a.jpg');
+      expect(mockMediaService.uploadFile).not.toHaveBeenCalled();
+    });
+
+    it('应使用文件上传创建 Banner', async () => {
+      const mockFile = { originalname: 'test.jpg', mimetype: 'image/jpeg', buffer: Buffer.from('x'), size: 100 } as Express.Multer.File;
+      mockMediaService.uploadFile.mockResolvedValue({ fileUrl: '/storage/banners/123.jpg', fileKey: 'banners/123.jpg' });
+      mockPrisma.banner.create.mockResolvedValue({ id: 'new', title: '新', imageUrl: '/storage/banners/123.jpg' });
+
+      const result = await service.create({ title: '新' }, mockFile);
+      expect(mockMediaService.uploadFile).toHaveBeenCalledWith(mockFile, 'banners');
+      expect(result.imageUrl).toBe('/storage/banners/123.jpg');
+    });
+
+    it('应无图片时抛出错误', async () => {
+      await expect(service.create({ title: '新' })).rejects.toThrow('请提供图片');
     });
   });
 
@@ -76,11 +101,23 @@ describe('BannerService', () => {
       await expect(service.update('bad', { title: 'x' })).rejects.toThrow(NotFoundException);
     });
 
-    it('应成功更新', async () => {
+    it('应成功更新（保留原图片）', async () => {
       mockPrisma.banner.findUnique.mockResolvedValue({ id: '1' });
       mockPrisma.banner.update.mockResolvedValue({ id: '1', title: '新' });
       const result = await service.update('1', { title: '新' });
       expect(result.title).toBe('新');
+      expect(mockMediaService.uploadFile).not.toHaveBeenCalled();
+    });
+
+    it('应成功更新（替换图片）', async () => {
+      const mockFile = { originalname: 'new.jpg', mimetype: 'image/jpeg', buffer: Buffer.from('x'), size: 100 } as Express.Multer.File;
+      mockMediaService.uploadFile.mockResolvedValue({ fileUrl: '/storage/banners/456.jpg', fileKey: 'banners/456.jpg' });
+      mockPrisma.banner.findUnique.mockResolvedValue({ id: '1' });
+      mockPrisma.banner.update.mockResolvedValue({ id: '1', title: '新', imageUrl: '/storage/banners/456.jpg' });
+
+      const result = await service.update('1', { title: '新' }, mockFile);
+      expect(mockMediaService.uploadFile).toHaveBeenCalledWith(mockFile, 'banners');
+      expect(result.imageUrl).toBe('/storage/banners/456.jpg');
     });
   });
 

@@ -13,8 +13,17 @@ jest.mock('@prisma/client', () => {
   return { PrismaClient: jest.fn(() => mockPrisma) };
 });
 
+const mockMediaService = {
+  uploadFile: jest.fn(),
+};
+
+jest.mock('../media/media.service', () => ({
+  MediaService: jest.fn(() => mockMediaService),
+}));
+
 import { Test, TestingModule } from '@nestjs/testing';
 import { CategoryService } from './category.service';
+import { MediaService } from '../media/media.service';
 import { NotFoundException, ConflictException, BadRequestException } from '@nestjs/common';
 
 describe('CategoryService', () => {
@@ -23,7 +32,7 @@ describe('CategoryService', () => {
   beforeEach(async () => {
     jest.clearAllMocks();
     const module: TestingModule = await Test.createTestingModule({
-      providers: [CategoryService],
+      providers: [CategoryService, MediaService],
     }).compile();
     service = module.get<CategoryService>(CategoryService);
   });
@@ -74,11 +83,23 @@ describe('CategoryService', () => {
       ).rejects.toThrow(BadRequestException);
     });
 
-    it('应成功创建分类', async () => {
+    it('应成功创建分类（无图片）', async () => {
       mockPrisma.category.findUnique.mockResolvedValue(null);
       mockPrisma.category.create.mockResolvedValue({ id: 'new', name: '新分类', slug: 'new' });
       const result = await service.create({ name: '新分类', slug: 'new' });
       expect(result.name).toBe('新分类');
+      expect(mockMediaService.uploadFile).not.toHaveBeenCalled();
+    });
+
+    it('应成功创建分类（带图片文件上传）', async () => {
+      const mockFile = { originalname: 'cover.jpg', mimetype: 'image/jpeg', buffer: Buffer.from('x'), size: 100 } as Express.Multer.File;
+      mockPrisma.category.findUnique.mockResolvedValue(null);
+      mockMediaService.uploadFile.mockResolvedValue({ fileUrl: '/storage/categories/c1.jpg', fileKey: 'categories/c1.jpg' });
+      mockPrisma.category.create.mockResolvedValue({ id: 'new', name: '新分类', slug: 'new', imageUrl: '/storage/categories/c1.jpg' });
+
+      const result = await service.create({ name: '新分类', slug: 'new' }, mockFile);
+      expect(mockMediaService.uploadFile).toHaveBeenCalledWith(mockFile, 'categories');
+      expect(result.imageUrl).toBe('/storage/categories/c1.jpg');
     });
   });
 
@@ -90,11 +111,23 @@ describe('CategoryService', () => {
       ).rejects.toThrow(NotFoundException);
     });
 
-    it('应成功更新', async () => {
+    it('应成功更新（保留原图）', async () => {
       mockPrisma.category.findUnique.mockResolvedValue({ id: '1', name: '旧', slug: 'old' });
       mockPrisma.category.update.mockResolvedValue({ id: '1', name: '新', slug: 'old' });
       const result = await service.update('1', { name: '新' });
       expect(result.name).toBe('新');
+      expect(mockMediaService.uploadFile).not.toHaveBeenCalled();
+    });
+
+    it('应成功更新（替换图片）', async () => {
+      const mockFile = { originalname: 'new.jpg', mimetype: 'image/jpeg', buffer: Buffer.from('x'), size: 100 } as Express.Multer.File;
+      mockPrisma.category.findUnique.mockResolvedValue({ id: '1', name: '旧', slug: 'old' });
+      mockMediaService.uploadFile.mockResolvedValue({ fileUrl: '/storage/categories/c2.jpg', fileKey: 'categories/c2.jpg' });
+      mockPrisma.category.update.mockResolvedValue({ id: '1', name: '新', slug: 'old', imageUrl: '/storage/categories/c2.jpg' });
+
+      const result = await service.update('1', { name: '新' }, mockFile);
+      expect(mockMediaService.uploadFile).toHaveBeenCalledWith(mockFile, 'categories');
+      expect(result.imageUrl).toBe('/storage/categories/c2.jpg');
     });
   });
 

@@ -7,7 +7,10 @@ import {
   Body,
   Param,
   UseGuards,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtAdminGuard } from '../../common/guards/jwt-admin.guard';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
@@ -31,14 +34,20 @@ export class AdminCategoryController {
 
   @Post()
   @Roles('category:write')
-  create(@Body() dto: CreateCategoryDto) {
-    return this.categoryService.create(dto);
+  @UseInterceptors(FileInterceptor('file'))
+  create(@Body() dto: CreateCategoryDto, @UploadedFile() file?: Express.Multer.File) {
+    return this.categoryService.create(dto, file);
   }
 
   @Put(':id')
   @Roles('category:write')
-  update(@Param('id') id: string, @Body() dto: UpdateCategoryDto) {
-    return this.categoryService.update(id, dto);
+  @UseInterceptors(FileInterceptor('file'))
+  update(
+    @Param('id') id: string,
+    @Body() dto: UpdateCategoryDto,
+    @UploadedFile() file?: Express.Multer.File,
+  ) {
+    return this.categoryService.update(id, dto, file);
   }
 
   @Delete(':id')

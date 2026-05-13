@@ -5,6 +5,6 @@ export const storageConfig = () => ({
     secretKey: process.env.STORAGE_SECRET_KEY || 'minioadmin',
     bucket: process.env.STORAGE_BUCKET || '3dprint',
     publicBaseUrl:
-      process.env.STORAGE_PUBLIC_URL || 'http://localhost:9000/3dprint',
+      process.env.STORAGE_PUBLIC_URL || '/storage',
   },
 });

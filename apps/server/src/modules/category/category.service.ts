@@ -2,11 +2,13 @@ import { Injectable, NotFoundException, ConflictException, BadRequestException }
 import { PrismaClient } from '@prisma/client';
 import { CreateCategoryDto, UpdateCategoryDto, SortCategoryDto } from './dto/category.dto';
 import { CategoryNode } from '@3d-print/types';
+import { MediaService } from '../media/media.service';
 
 const prisma = new PrismaClient();
 
 @Injectable()
 export class CategoryService {
+  constructor(private mediaService: MediaService) {}
   async getTree(): Promise<CategoryNode[]> {
     const all = await prisma.category.findMany({
       where: { isVisible: true },
@@ -84,7 +86,7 @@ export class CategoryService {
     };
   }
 
-  async create(dto: CreateCategoryDto) {
+  async create(dto: CreateCategoryDto, file?: Express.Multer.File) {
     const existing = await prisma.category.findUnique({ where: { slug: dto.slug } });
     if (existing) throw new ConflictException('分类 slug 已存在');
 
@@ -93,10 +95,17 @@ export class CategoryService {
       if (!parent) throw new BadRequestException('父分类不存在');
     }
 
-    return prisma.category.create({ data: dto });
+    const data: any = { ...dto };
+
+    if (file) {
+      const result = await this.mediaService.uploadFile(file, 'categories');
+      data.imageUrl = result.fileUrl;
+    }
+
+    return prisma.category.create({ data });
   }
 
-  async update(id: string, dto: UpdateCategoryDto) {
+  async update(id: string, dto: UpdateCategoryDto, file?: Express.Multer.File) {
     const category = await prisma.category.findUnique({ where: { id } });
     if (!category) throw new NotFoundException('分类不存在');
 
@@ -111,7 +120,14 @@ export class CategoryService {
       if (!parent) throw new BadRequestException('父分类不存在');
     }
 
-    return prisma.category.update({ where: { id }, data: dto });
+    const data: any = { ...dto };
+
+    if (file) {
+      const result = await this.mediaService.uploadFile(file, 'categories');
+      data.imageUrl = result.fileUrl;
+    }
+
+    return prisma.category.update({ where: { id }, data });
   }
 
   async delete(id: string) {

@@ -1,10 +1,13 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
+import { MediaService } from '../media/media.service';
 
 const prisma = new PrismaClient();
 
 @Injectable()
 export class BannerService {
+  constructor(private mediaService: MediaService) {}
+
   async findActive() {
     return prisma.banner.findMany({
       where: { isActive: true },
@@ -33,13 +36,37 @@ export class BannerService {
     return banner;
   }
 
-  async create(dto: { title?: string; subtitle?: string; imageUrl: string; linkUrl?: string; sortOrder?: number; isActive?: boolean }) {
-    return prisma.banner.create({ data: dto as any });
+  async create(
+    dto: { title?: string; subtitle?: string; imageUrl?: string; linkUrl?: string; sortOrder?: number; isActive?: boolean },
+    file?: Express.Multer.File,
+  ) {
+    let imageUrl = dto.imageUrl;
+
+    if (file) {
+      const result = await this.mediaService.uploadFile(file, 'banners');
+      imageUrl = result.fileUrl;
+    }
+
+    if (!imageUrl) throw new NotFoundException('请提供图片（上传文件或填写 URL）');
+
+    return prisma.banner.create({ data: { ...dto, imageUrl } as any });
   }
 
-  async update(id: string, dto: { title?: string; subtitle?: string; imageUrl?: string; linkUrl?: string; sortOrder?: number; isActive?: boolean }) {
+  async update(
+    id: string,
+    dto: { title?: string; subtitle?: string; imageUrl?: string; linkUrl?: string; sortOrder?: number; isActive?: boolean },
+    file?: Express.Multer.File,
+  ) {
     await this.findById(id);
-    return prisma.banner.update({ where: { id }, data: dto as any });
+
+    const data: any = { ...dto };
+
+    if (file) {
+      const result = await this.mediaService.uploadFile(file, 'banners');
+      data.imageUrl = result.fileUrl;
+    }
+
+    return prisma.banner.update({ where: { id }, data });
   }
 
   async delete(id: string) {

@@ -180,4 +180,27 @@ export class MediaService {
       },
     });
   }
+
+  async uploadFile(
+    file: Express.Multer.File,
+    folder: string,
+  ): Promise<{ fileUrl: string; fileKey: string }> {
+    const ext = file.originalname.split('.').pop()?.toLowerCase() || 'bin';
+    const key = `${folder}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+
+    await this.s3.send(
+      new PutObjectCommand({
+        Bucket: this.bucket,
+        Key: key,
+        Body: file.buffer,
+        ContentType: file.mimetype,
+        ContentLength: file.size,
+      }),
+    );
+
+    return {
+      fileUrl: `${this.publicBaseUrl}/${key}`,
+      fileKey: key,
+    };
+  }
 }

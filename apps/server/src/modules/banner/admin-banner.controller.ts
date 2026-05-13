@@ -1,6 +1,20 @@
-import { Controller, Get, Post, Patch, Delete, Param, Query, Body, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Patch,
+  Delete,
+  Param,
+  Query,
+  Body,
+  UseGuards,
+  UseInterceptors,
+  UploadedFile,
+} from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtAdminGuard } from '../../common/guards/jwt-admin.guard';
 import { BannerService } from './banner.service';
+import { CreateBannerDto, UpdateBannerDto } from './dto/banner.dto';
 
 @Controller('admin/banners')
 @UseGuards(JwtAdminGuard)
@@ -18,13 +32,22 @@ export class AdminBannerController {
   }
 
   @Post()
-  create(@Body() body: any) {
-    return this.bannerService.create(body);
+  @UseInterceptors(FileInterceptor('file'))
+  create(
+    @Body() body: CreateBannerDto,
+    @UploadedFile() file?: Express.Multer.File,
+  ) {
+    return this.bannerService.create(body, file);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() body: any) {
-    return this.bannerService.update(id, body);
+  @UseInterceptors(FileInterceptor('file'))
+  update(
+    @Param('id') id: string,
+    @Body() body: UpdateBannerDto,
+    @UploadedFile() file?: Express.Multer.File,
+  ) {
+    return this.bannerService.update(id, body, file);
   }
 
   @Delete(':id')
