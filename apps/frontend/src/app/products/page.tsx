@@ -34,7 +34,7 @@ function ProductList() {
     <div className="max-w-6xl mx-auto px-4 py-8">
       <Breadcrumb items={[{ label: '产品浏览' }]} />
 
-      <div className="flex gap-8 mt-6">
+      <div className="flex flex-col md:flex-row gap-8 mt-6">
         <FilterSidebar />
 
         <div className="flex-1 min-w-0">

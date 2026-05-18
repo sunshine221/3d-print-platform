@@ -28,7 +28,7 @@ export default function SearchSortBar() {
   };
 
   return (
-    <div className="flex items-center gap-4">
+    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
       <form onSubmit={handleSearch} className="flex-1 max-w-md">
         <input
           name="search"

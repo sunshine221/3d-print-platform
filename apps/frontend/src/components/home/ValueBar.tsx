@@ -39,7 +39,7 @@ const values = [
 
 export default function ValueBar() {
   return (
-    <section className="border-t border-void-200 dark:border-white/5 bg-void-100 dark:bg-void-800/20 py-16 relative overflow-hidden">
+    <section className="border-t border-void-200 dark:border-white/5 bg-void-100 dark:bg-void-800/20 py-10 sm:py-16 relative overflow-hidden">
       <div className="absolute inset-0 grid-bg opacity-20 pointer-events-none" />
       <div className="max-w-6xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-8 relative">
         {values.map((v) => (

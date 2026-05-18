@@ -68,6 +68,7 @@ const config: Config = {
         'grid-scroll': 'gridScroll 20s linear infinite',
         'scan-line': 'scanLine 8s linear infinite',
         'border-glow': 'borderGlow 3s ease-in-out infinite',
+        'slide-down': 'slideDown 0.25s ease-out',
       },
       keyframes: {
         fadeIn: {
@@ -101,6 +102,10 @@ const config: Config = {
         borderGlow: {
           '0%, 100%': { borderColor: 'rgb(var(--cyber-400) / 0.15)' },
           '50%': { borderColor: 'rgb(var(--cyber-400) / 0.45)' },
+        },
+        slideDown: {
+          '0%': { opacity: '0', transform: 'translateY(-8px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
         },
       },
       boxShadow: {

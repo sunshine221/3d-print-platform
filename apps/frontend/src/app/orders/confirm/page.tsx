@@ -8,8 +8,8 @@ import { useAuth } from '@/hooks/useAuth';
 import { PriceDisplay } from '@3d-print/ui';
 import Loading from '@/components/ui/Loading';
 
-const inputClass = 'w-full px-3 py-2 bg-void-800 border border-white/10 rounded-lg text-void-200 placeholder:text-void-500 focus:outline-none focus:ring-2 focus:ring-cyber-400 focus:border-transparent';
-const labelClass = 'block text-sm text-void-300 mb-1';
+const inputClass = 'w-full px-3 py-2 bg-void-100 dark:bg-void-800 border border-void-300 dark:border-white/10 rounded-lg text-void-800 dark:text-void-200 placeholder:text-void-400 dark:placeholder:text-void-500 focus:outline-none focus:ring-2 focus:ring-cyber-500 dark:focus:ring-cyber-400 focus:border-transparent';
+const labelClass = 'block text-sm text-void-600 dark:text-void-300 mb-1';
 
 function ConfirmForm() {
   const router = useRouter();
@@ -48,11 +48,11 @@ function ConfirmForm() {
     return null;
   }
 
-  if (!product) return <p className="text-center py-16 text-void-400">产品信息加载失败</p>;
+  if (!product) return <p className="text-center py-16 text-void-500 dark:text-void-400">产品信息加载失败</p>;
 
   const productData = product as any;
   const sku = productData.skus?.find((s: any) => s.id === skuId);
-  if (!sku) return <p className="text-center py-16 text-void-400">SKU 不存在</p>;
+  if (!sku) return <p className="text-center py-16 text-void-500 dark:text-void-400">SKU 不存在</p>;
 
   const totalPrice = sku.price * quantity;
 
@@ -78,37 +78,37 @@ function ConfirmForm() {
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold mb-8 text-void-100">确认订单</h1>
+      <h1 className="text-2xl font-bold mb-8 text-void-900 dark:text-void-100">确认订单</h1>
 
       <div className="card-dark p-6 mb-6">
-        <h2 className="font-medium text-void-100 mb-3">商品信息</h2>
+        <h2 className="font-medium text-void-900 dark:text-void-100 mb-3">商品信息</h2>
         <div className="flex justify-between items-start mb-2">
           <div>
-            <p className="font-medium text-void-100">{productData.name}</p>
-            <p className="text-sm text-void-400">SKU: {sku.skuCode}</p>
-            <p className="text-sm text-void-400">
+            <p className="font-medium text-void-900 dark:text-void-100">{productData.name}</p>
+            <p className="text-sm text-void-500 dark:text-void-400">SKU: {sku.skuCode}</p>
+            <p className="text-sm text-void-500 dark:text-void-400">
               {Object.entries(sku.specCombo).map(([k, v]) => `${k}: ${v}`).join('，')}
             </p>
           </div>
         </div>
-        <div className="flex items-center justify-between mt-3 pt-3 border-t border-white/8 text-sm">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between mt-3 pt-3 border-t border-void-200 dark:border-white/8 text-sm gap-3">
           <div className="flex items-center gap-2">
-            <span className="text-void-400">数量</span>
+            <span className="text-void-500 dark:text-void-400">数量</span>
             <input
               type="number"
               min={sku.minOrderQty || 1}
               value={quantity}
               onChange={(e) => setQuantity(Math.max(1, Number(e.target.value)))}
-              className="w-20 px-2 py-1 bg-void-800 border border-white/10 rounded text-center text-void-200"
+              className="w-20 px-2 py-1 bg-void-100 dark:bg-void-800 border border-void-300 dark:border-white/10 rounded text-center text-void-800 dark:text-void-200"
             />
           </div>
           <div>
-            <span className="text-void-400 mr-2">单价</span>
-            <span className="text-void-200"><PriceDisplay price={sku.price} /></span>
+            <span className="text-void-500 dark:text-void-400 mr-2">单价</span>
+            <span className="text-void-800 dark:text-void-200"><PriceDisplay price={sku.price} /></span>
           </div>
         </div>
-        <div className="text-right mt-3 pt-3 border-t border-white/8">
-          <span className="text-void-400 mr-2">合计</span>
+        <div className="text-right mt-3 pt-3 border-t border-void-200 dark:border-white/8">
+          <span className="text-void-500 dark:text-void-400 mr-2">合计</span>
           <span className="text-xl font-bold text-cyber-400">
             ¥{(totalPrice / 100).toFixed(2)}
           </span>
@@ -117,7 +117,7 @@ function ConfirmForm() {
 
       <form onSubmit={handleSubmit}>
         <div className="card-dark p-6 mb-6 space-y-4">
-          <h2 className="font-medium text-void-100">联系信息</h2>
+          <h2 className="font-medium text-void-900 dark:text-void-100">联系信息</h2>
           <div>
             <label className={labelClass}>联系人 *</label>
             <input

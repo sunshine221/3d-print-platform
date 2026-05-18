@@ -47,15 +47,15 @@ export default async function ContentPage({ params }: { params: { slug: string }
   if (!page) {
     return (
       <div className="max-w-3xl mx-auto px-4 py-16">
-        <h1 className="text-3xl font-bold mb-6 capitalize text-void-100">{slug}</h1>
-        <p className="text-void-400">此页面暂无内容，请联系管理员更新。</p>
+        <h1 className="text-2xl sm:text-3xl font-bold mb-6 text-void-900 dark:text-void-100">{slug}</h1>
+        <p className="text-void-500 dark:text-void-400">此页面暂无内容，请联系管理员更新。</p>
       </div>
     );
   }
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-12">
-      <h1 className="text-3xl font-bold mb-8 text-void-900 dark:text-void-100">{page.title}</h1>
+      <h1 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 text-void-900 dark:text-void-100">{page.title}</h1>
       {page.content && (
         <div
           className="prose dark:prose-invert max-w-none

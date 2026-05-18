@@ -22,7 +22,7 @@ export default function Footer() {
       <div className="glow-line absolute top-0 left-0 right-0" />
       <div className="absolute inset-0 grid-bg opacity-30 pointer-events-none" />
 
-      <div className="max-w-6xl mx-auto px-4 py-16 relative">
+      <div className="max-w-6xl mx-auto px-4 py-10 sm:py-16 relative">
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
           <div className="col-span-2">
             <div className="flex items-center gap-2 mb-4">
@@ -38,7 +38,7 @@ export default function Footer() {
 
           {Object.entries(footerLinks).map(([title, links]) => (
             <div key={title}>
-              <h3 className="text-void-700 dark:text-void-100 font-semibold text-sm mb-4 tracking-wide uppercase">
+              <h3 className="text-void-700 dark:text-void-100 font-semibold text-sm mb-4 tracking-wide">
                 {title}
               </h3>
               <ul className="space-y-2.5">

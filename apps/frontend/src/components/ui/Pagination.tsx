@@ -31,17 +31,17 @@ export default function Pagination({ pagination }: Props) {
   }
 
   return (
-    <div className="flex items-center justify-center gap-1 mt-8">
+    <div className="flex items-center justify-center gap-1 mt-8 flex-wrap">
       <button
         onClick={() => goTo(page - 1)}
         disabled={page <= 1}
-        className="px-3 py-1.5 text-sm rounded border border-white/10 text-void-300 disabled:opacity-30 hover:bg-white/5 transition-colors"
+        className="px-3 py-1.5 text-sm rounded border border-void-300 dark:border-white/10 text-void-600 dark:text-void-300 disabled:opacity-30 hover:bg-void-100 dark:hover:bg-white/5 transition-colors"
       >
         上一页
       </button>
       {pages.map((p, i) =>
         p === '...' ? (
-          <span key={`ellipsis-${i}`} className="px-2 text-void-500">
+          <span key={`ellipsis-${i}`} className="px-2 text-void-400 dark:text-void-500">
             ...
           </span>
         ) : (
@@ -51,7 +51,7 @@ export default function Pagination({ pagination }: Props) {
             className={`px-3 py-1.5 text-sm rounded border ${
               p === page
                 ? 'bg-cyber-500 text-void-900 border-cyber-500 font-medium'
-                : 'border-white/10 text-void-300 hover:bg-white/5'
+                : 'border-void-300 dark:border-white/10 text-void-600 dark:text-void-300 hover:bg-void-100 dark:hover:bg-white/5'
             } transition-colors`}
           >
             {p}
@@ -61,7 +61,7 @@ export default function Pagination({ pagination }: Props) {
       <button
         onClick={() => goTo(page + 1)}
         disabled={page >= totalPages}
-        className="px-3 py-1.5 text-sm rounded border border-white/10 text-void-300 disabled:opacity-30 hover:bg-white/5 transition-colors"
+        className="px-3 py-1.5 text-sm rounded border border-void-300 dark:border-white/10 text-void-600 dark:text-void-300 disabled:opacity-30 hover:bg-void-100 dark:hover:bg-white/5 transition-colors"
       >
         下一页
       </button>

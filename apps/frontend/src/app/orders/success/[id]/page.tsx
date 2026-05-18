@@ -14,11 +14,11 @@ export default function OrderSuccessPage() {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
         </svg>
       </div>
-      <h1 className="text-2xl font-bold mb-4 text-void-100">下单成功！</h1>
-      <p className="text-void-400 mb-8">
+      <h1 className="text-2xl font-bold mb-4 text-void-900 dark:text-void-100">下单成功！</h1>
+      <p className="text-void-500 dark:text-void-400 mb-8">
         您的订单已提交，我们会尽快处理。
       </p>
-      <div className="space-x-4">
+      <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
         <Link
           href={`/account/orders/${id}`}
           className="inline-block px-6 py-2.5 gradient-btn rounded-lg font-medium text-sm"
@@ -27,7 +27,7 @@ export default function OrderSuccessPage() {
         </Link>
         <Link
           href="/products"
-          className="inline-block px-6 py-2.5 border border-white/10 rounded-lg text-void-300 hover:bg-white/5 transition-colors"
+          className="inline-block px-6 py-2.5 border border-void-300 dark:border-white/10 rounded-lg text-void-600 dark:text-void-300 hover:bg-void-100 dark:hover:bg-white/5 transition-colors"
         >
           继续浏览
         </Link>

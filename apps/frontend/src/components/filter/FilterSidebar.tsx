@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { useCategories } from '@/hooks/useCategories';
 import type { CategoryNode } from '@3d-print/types';
@@ -44,7 +45,7 @@ function CategoryTreeItem({ node, depth = 0 }: { node: CategoryNode; depth?: num
   );
 }
 
-export default function FilterSidebar() {
+function FilterContent() {
   const { categories } = useCategories();
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -81,7 +82,7 @@ export default function FilterSidebar() {
   };
 
   return (
-    <aside className="w-60 shrink-0 space-y-6">
+    <div className="space-y-6">
       {/* 分类 */}
       <div>
         <h4 className="font-medium text-sm text-void-800 dark:text-void-100 mb-2">产品分类</h4>
@@ -165,6 +166,46 @@ export default function FilterSidebar() {
           </button>
         </form>
       </div>
-    </aside>
+    </div>
+  );
+}
+
+export default function FilterSidebar() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <>
+      {/* 移动端筛选按钮 */}
+      <button
+        onClick={() => setOpen(!open)}
+        className="md:hidden flex items-center gap-2 px-4 py-2 bg-void-100 dark:bg-void-800 border border-void-300 dark:border-white/10 rounded-lg text-sm text-void-700 dark:text-void-200 hover:border-cyber-400/30 transition-colors"
+      >
+        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+        </svg>
+        筛选
+        {open ? (
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M5 15l7-7 7 7" />
+          </svg>
+        ) : (
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+          </svg>
+        )}
+      </button>
+
+      {/* 移动端展开的筛选面板 */}
+      {open && (
+        <div className="md:hidden bg-white dark:bg-void-800 border border-void-200 dark:border-white/8 rounded-xl p-4 animate-slide-down">
+          <FilterContent />
+        </div>
+      )}
+
+      {/* 桌面端固定侧边栏 */}
+      <aside className="hidden md:block w-60 shrink-0">
+        <FilterContent />
+      </aside>
+    </>
   );
 }

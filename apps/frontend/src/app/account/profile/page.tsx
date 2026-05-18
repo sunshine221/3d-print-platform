@@ -4,8 +4,8 @@ import { useState, FormEvent, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { updateMe, changePassword } from '@/lib/api';
 
-const inputClass = 'w-full px-3 py-2 bg-void-800 border border-white/10 rounded-lg text-void-200 placeholder:text-void-500 focus:outline-none focus:ring-2 focus:ring-cyber-400 focus:border-transparent';
-const labelClass = 'block text-sm font-medium text-void-300 mb-1';
+const inputClass = 'w-full px-3 py-2 bg-void-100 dark:bg-void-800 border border-void-300 dark:border-white/10 rounded-lg text-void-800 dark:text-void-200 placeholder:text-void-400 dark:placeholder:text-void-500 focus:outline-none focus:ring-2 focus:ring-cyber-500 dark:focus:ring-cyber-400 focus:border-transparent';
+const labelClass = 'block text-sm font-medium text-void-600 dark:text-void-300 mb-1';
 
 export default function ProfilePage() {
   const { user, isLoading } = useAuth();

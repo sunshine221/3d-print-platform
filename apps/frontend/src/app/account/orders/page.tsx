@@ -10,7 +10,7 @@ const STATUS_MAP: Record<string, { color: string; label: string }> = {
   in_production: { color: 'bg-cyber-400/10 text-cyber-400 border border-cyber-400/20', label: '生产中' },
   shipped: { color: 'bg-neon-400/10 text-neon-400 border border-neon-400/20', label: '已发货' },
   completed: { color: 'bg-green-400/10 text-green-400 border border-green-400/20', label: '已完成' },
-  cancelled: { color: 'bg-white/5 text-void-400 border border-white/5', label: '已取消' },
+  cancelled: { color: 'bg-void-100 dark:bg-white/5 text-void-500 dark:text-void-400 border border-void-200 dark:border-white/5', label: '已取消' },
 };
 
 export default function MyOrdersPage() {
@@ -29,29 +29,29 @@ export default function MyOrdersPage() {
 
   return (
     <div>
-      <h2 className="text-lg font-semibold text-void-100 mb-4">我的订单</h2>
+      <h2 className="text-lg font-semibold text-void-900 dark:text-void-100 mb-4">我的订单</h2>
       {orders.length === 0 ? (
-        <p className="text-void-400 py-8 text-center">暂无订单</p>
+        <p className="text-void-500 dark:text-void-400 py-8 text-center">暂无订单</p>
       ) : (
         <div className="space-y-3">
           {orders.map((order) => {
-            const st = STATUS_MAP[order.status] || { color: 'bg-white/5 text-void-400 border border-white/5', label: order.status };
+            const st = STATUS_MAP[order.status] || { color: 'bg-void-100 dark:bg-white/5 text-void-500 dark:text-void-400 border border-void-200 dark:border-white/5', label: order.status };
             return (
               <Link
                 key={order.id}
                 href={`/account/orders/${order.id}`}
                 className="block card-dark p-4 hover:border-cyber-400/20"
               >
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                   <div>
-                    <p className="text-sm text-void-300">{order.orderNo}</p>
-                    <p className="text-xs text-void-500 mt-1">
+                    <p className="text-sm text-void-600 dark:text-void-300">{order.orderNo}</p>
+                    <p className="text-xs text-void-500 dark:text-void-500 mt-1">
                       共 {order.itemCount} 件 · {new Date(order.createdAt).toLocaleDateString('zh-CN')}
                     </p>
                   </div>
                   <div className="flex items-center gap-3">
                     <span className={`text-xs px-2 py-1 rounded ${st.color}`}>{st.label}</span>
-                    <span className="font-semibold text-void-100">¥{(order.totalPrice / 100).toFixed(2)}</span>
+                    <span className="font-semibold text-void-900 dark:text-void-100">¥{(order.totalPrice / 100).toFixed(2)}</span>
                   </div>
                 </div>
               </Link>
