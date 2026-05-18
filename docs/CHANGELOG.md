@@ -2,6 +2,16 @@
 
 > 记录项目配置、架构、部署等非代码层面的重要变更。代码变更通过 git log 查看。
 
+## 2026-05-18
+
+### feat: 双主题（亮色/暗色）+ 随系统切换
+
+- **范围**：全站 35 个文件，新增 ThemeProvider + ThemeToggle 组件
+- **方案**：CSS 变量 + Tailwind `darkMode: 'class'`，组件通过 `dark:` 变体适配
+- **色系**：void（表面色）/ cyber（青色强调）/ neon（紫色次强调），亮暗各一套 RGB 值
+- **修复**：亮色模式文字不可见、SKU 选项对比度、首页背景不统一、分类卡片高度、glow-line 蓝色线条等 11 个 UI 问题
+- **关联**：[[007-dual-theme-css-variables]]
+
 ## 2026-05-12
 
 ### 修复：TransformInterceptor 与 AllExceptionsFilter 未注册
