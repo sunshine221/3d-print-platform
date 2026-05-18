@@ -8,6 +8,9 @@ import { useAuth } from '@/hooks/useAuth';
 import { PriceDisplay } from '@3d-print/ui';
 import Loading from '@/components/ui/Loading';
 
+const inputClass = 'w-full px-3 py-2 bg-void-800 border border-white/10 rounded-lg text-void-200 placeholder:text-void-500 focus:outline-none focus:ring-2 focus:ring-cyber-400 focus:border-transparent';
+const labelClass = 'block text-sm text-void-300 mb-1';
+
 function ConfirmForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -45,11 +48,11 @@ function ConfirmForm() {
     return null;
   }
 
-  if (!product) return <p className="text-center py-16 text-gray-400">产品信息加载失败</p>;
+  if (!product) return <p className="text-center py-16 text-void-400">产品信息加载失败</p>;
 
   const productData = product as any;
   const sku = productData.skus?.find((s: any) => s.id === skuId);
-  if (!sku) return <p className="text-center py-16 text-gray-400">SKU 不存在</p>;
+  if (!sku) return <p className="text-center py-16 text-void-400">SKU 不存在</p>;
 
   const totalPrice = sku.price * quantity;
 
@@ -75,93 +78,93 @@ function ConfirmForm() {
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold mb-8">确认订单</h1>
+      <h1 className="text-2xl font-bold mb-8 text-void-100">确认订单</h1>
 
-      <div className="border rounded-lg p-6 mb-6">
-        <h2 className="font-medium mb-3">商品信息</h2>
+      <div className="card-dark p-6 mb-6">
+        <h2 className="font-medium text-void-100 mb-3">商品信息</h2>
         <div className="flex justify-between items-start mb-2">
           <div>
-            <p className="font-medium">{productData.name}</p>
-            <p className="text-sm text-gray-500">SKU: {sku.skuCode}</p>
-            <p className="text-sm text-gray-500">
+            <p className="font-medium text-void-100">{productData.name}</p>
+            <p className="text-sm text-void-400">SKU: {sku.skuCode}</p>
+            <p className="text-sm text-void-400">
               {Object.entries(sku.specCombo).map(([k, v]) => `${k}: ${v}`).join('，')}
             </p>
           </div>
         </div>
-        <div className="flex items-center justify-between mt-3 pt-3 border-t text-sm">
+        <div className="flex items-center justify-between mt-3 pt-3 border-t border-white/8 text-sm">
           <div className="flex items-center gap-2">
-            <span className="text-gray-500">数量</span>
+            <span className="text-void-400">数量</span>
             <input
               type="number"
               min={sku.minOrderQty || 1}
               value={quantity}
               onChange={(e) => setQuantity(Math.max(1, Number(e.target.value)))}
-              className="w-20 px-2 py-1 border rounded text-center"
+              className="w-20 px-2 py-1 bg-void-800 border border-white/10 rounded text-center text-void-200"
             />
           </div>
           <div>
-            <span className="text-gray-500 mr-2">单价</span>
-            <PriceDisplay price={sku.price} />
+            <span className="text-void-400 mr-2">单价</span>
+            <span className="text-void-200"><PriceDisplay price={sku.price} /></span>
           </div>
         </div>
-        <div className="text-right mt-3 pt-3 border-t">
-          <span className="text-gray-500 mr-2">合计</span>
-          <span className="text-xl font-bold text-red-500">
+        <div className="text-right mt-3 pt-3 border-t border-white/8">
+          <span className="text-void-400 mr-2">合计</span>
+          <span className="text-xl font-bold text-cyber-400">
             ¥{(totalPrice / 100).toFixed(2)}
           </span>
         </div>
       </div>
 
       <form onSubmit={handleSubmit}>
-        <div className="border rounded-lg p-6 mb-6 space-y-4">
-          <h2 className="font-medium">联系信息</h2>
+        <div className="card-dark p-6 mb-6 space-y-4">
+          <h2 className="font-medium text-void-100">联系信息</h2>
           <div>
-            <label className="block text-sm text-gray-700 mb-1">联系人 *</label>
+            <label className={labelClass}>联系人 *</label>
             <input
               type="text"
               required
               value={contactName}
               onChange={(e) => setContactName(e.target.value)}
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className={inputClass}
             />
           </div>
           <div>
-            <label className="block text-sm text-gray-700 mb-1">联系电话 *</label>
+            <label className={labelClass}>联系电话 *</label>
             <input
               type="text"
               required
               value={contactPhone}
               onChange={(e) => setContactPhone(e.target.value)}
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className={inputClass}
             />
           </div>
           <div>
-            <label className="block text-sm text-gray-700 mb-1">收货地址 *</label>
+            <label className={labelClass}>收货地址 *</label>
             <textarea
               required
               value={shippingAddress}
               onChange={(e) => setShippingAddress(e.target.value)}
               rows={2}
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className={inputClass}
             />
           </div>
           <div>
-            <label className="block text-sm text-gray-700 mb-1">备注</label>
+            <label className={labelClass}>备注</label>
             <textarea
               value={note}
               onChange={(e) => setNote(e.target.value)}
               rows={2}
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className={inputClass}
             />
           </div>
         </div>
 
-        {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
+        {error && <p className="text-red-400 text-sm mb-4">{error}</p>}
 
         <button
           type="submit"
           disabled={submitting}
-          className="w-full py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 disabled:bg-gray-300 transition-colors"
+          className="gradient-btn w-full py-3 rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none"
         >
           {submitting ? '提交中...' : '提交订单'}
         </button>

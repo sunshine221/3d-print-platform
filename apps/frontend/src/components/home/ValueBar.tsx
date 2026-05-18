@@ -39,15 +39,16 @@ const values = [
 
 export default function ValueBar() {
   return (
-    <section className="border-t bg-white py-16">
-      <div className="max-w-6xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-8">
+    <section className="border-t border-void-200 dark:border-white/5 bg-void-100 dark:bg-void-800/20 py-16 relative overflow-hidden">
+      <div className="absolute inset-0 grid-bg opacity-20 pointer-events-none" />
+      <div className="max-w-6xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-8 relative">
         {values.map((v) => (
           <div key={v.title} className="text-center group">
-            <div className="w-14 h-14 mx-auto mb-4 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center group-hover:bg-blue-100 group-hover:scale-110 transition-all duration-300">
+            <div className="w-14 h-14 mx-auto mb-4 rounded-xl bg-cyber-400/5 text-cyber-500 dark:text-cyber-400 flex items-center justify-center group-hover:bg-cyber-400/10 group-hover:scale-110 group-hover:shadow-glow-cyan transition-all duration-300 border border-cyber-400/10">
               {v.icon}
             </div>
-            <div className="text-base font-semibold text-gray-900">{v.title}</div>
-            <p className="text-sm text-gray-500 mt-1.5">{v.desc}</p>
+            <div className="text-base font-semibold text-void-800 dark:text-void-100">{v.title}</div>
+            <p className="text-sm text-void-500 dark:text-void-400 mt-1.5">{v.desc}</p>
           </div>
         ))}
       </div>

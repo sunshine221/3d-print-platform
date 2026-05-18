@@ -12,7 +12,7 @@ export default function ImageGallery({ images }: Props) {
 
   if (images.length === 0) {
     return (
-      <div className="aspect-square bg-gray-100 rounded-lg flex items-center justify-center text-gray-400">
+      <div className="aspect-square bg-void-800 rounded-lg flex items-center justify-center text-void-500 border border-white/5">
         暂无图片
       </div>
     );
@@ -23,7 +23,7 @@ export default function ImageGallery({ images }: Props) {
 
   return (
     <div>
-      <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden mb-4">
+      <div className="aspect-square bg-void-800 rounded-lg overflow-hidden mb-4 border border-white/5">
         <img
           src={current.url}
           alt={current.altText || ''}
@@ -37,7 +37,9 @@ export default function ImageGallery({ images }: Props) {
               key={img.id}
               onClick={() => setActive(i)}
               className={`w-16 h-16 rounded border-2 shrink-0 overflow-hidden transition-colors ${
-                i === active ? 'border-blue-500' : 'border-transparent hover:border-gray-300'
+                i === active
+                  ? 'border-cyber-400 shadow-glow-cyan-sm'
+                  : 'border-white/5 hover:border-white/20'
               }`}
             >
               <img src={img.url} alt={img.altText || ''} className="w-full h-full object-cover" />

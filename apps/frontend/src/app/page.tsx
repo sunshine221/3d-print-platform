@@ -29,35 +29,35 @@ export default function HomePage() {
       {/* 热门分类 */}
       <section className="max-w-6xl mx-auto px-4 py-20">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-gray-900">热门分类</h2>
-          <p className="text-gray-500 mt-2">选择您感兴趣的打印类别</p>
+          <h2 className="text-3xl font-bold text-void-900 dark:text-void-100">热门分类</h2>
+          <p className="text-void-500 dark:text-void-400 mt-2">选择您感兴趣的打印类别</p>
         </div>
         {categoriesLoading ? (
           <Loading />
         ) : topCategories.length > 0 ? (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {topCategories.map((cat, i) => (
-              <div key={cat.id} className="animate-fade-up" style={{ animationDelay: `${i * 100}ms`, animationFillMode: 'both' }}>
+              <div key={cat.id} className="animate-fade-up h-full" style={{ animationDelay: `${i * 100}ms`, animationFillMode: 'both' }}>
                 <CategoryCard category={cat} />
               </div>
             ))}
           </div>
         ) : (
-          <p className="text-center text-gray-400">暂无分类</p>
+          <p className="text-center text-void-500 dark:text-void-400">暂无分类</p>
         )}
       </section>
 
       {/* 精选产品 */}
-      <section className="bg-gradient-to-b from-gray-50 to-white py-20">
+      <section className="bg-void-100 dark:bg-void-800/20 py-20">
         <div className="max-w-6xl mx-auto px-4">
           <div className="flex items-end justify-between mb-10">
             <div>
-              <h2 className="text-3xl font-bold text-gray-900">精选产品</h2>
-              <p className="text-gray-500 mt-2">高品质 3D 打印产品，满足各种需求</p>
+              <h2 className="text-3xl font-bold text-void-900 dark:text-void-100">精选产品</h2>
+              <p className="text-void-500 dark:text-void-400 mt-2">高品质 3D 打印产品，满足各种需求</p>
             </div>
             <Link
               href="/products"
-              className="group flex items-center gap-1 text-blue-600 hover:text-blue-700 font-medium text-sm transition-colors"
+              className="group flex items-center gap-1 text-cyber-500 dark:text-cyber-400 hover:text-cyber-600 dark:hover:text-cyber-300 font-medium text-sm transition-colors"
             >
               查看全部
               <span className="group-hover:translate-x-0.5 transition-transform">→</span>
@@ -68,15 +68,17 @@ export default function HomePage() {
       </section>
 
       {/* 代打服务入口 */}
-      <section className="py-20">
-        <div className="max-w-3xl mx-auto px-4 text-center">
-          <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg shadow-blue-500/20">
+      <section className="py-20 relative overflow-hidden">
+        <div className="absolute inset-0 grid-bg opacity-20 pointer-events-none" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-cyber-400/3 rounded-full blur-3xl" />
+        <div className="max-w-3xl mx-auto px-4 text-center relative">
+          <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-cyber-400 to-neon-500 flex items-center justify-center shadow-glow-cyan">
             <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
             </svg>
           </div>
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">代打服务</h2>
-          <p className="text-gray-500 mb-8 text-lg leading-relaxed">
+          <h2 className="text-3xl font-bold text-void-900 dark:text-void-100 mb-4">代打服务</h2>
+          <p className="text-void-600 dark:text-void-300 mb-8 text-lg leading-relaxed">
             有 3D 模型文件？上传即可获取报价，专业团队为您打印
           </p>
           <Link
@@ -84,7 +86,7 @@ export default function HomePage() {
             className="gradient-btn inline-flex items-center gap-2 px-8 py-3.5 rounded-xl font-semibold text-lg"
           >
             上传模型获取报价
-            <span className="text-white/80">→</span>
+            <span>→</span>
           </Link>
         </div>
       </section>

@@ -9,21 +9,25 @@ export default function OrderSuccessPage() {
 
   return (
     <div className="max-w-lg mx-auto px-4 py-16 text-center">
-      <div className="text-5xl mb-6 text-green-500">&#10003;</div>
-      <h1 className="text-2xl font-bold mb-4">下单成功！</h1>
-      <p className="text-gray-600 mb-8">
+      <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-green-400/10 border border-green-400/20 flex items-center justify-center">
+        <svg className="w-8 h-8 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+        </svg>
+      </div>
+      <h1 className="text-2xl font-bold mb-4 text-void-100">下单成功！</h1>
+      <p className="text-void-400 mb-8">
         您的订单已提交，我们会尽快处理。
       </p>
       <div className="space-x-4">
         <Link
           href={`/account/orders/${id}`}
-          className="inline-block px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          className="inline-block px-6 py-2.5 gradient-btn rounded-lg font-medium text-sm"
         >
           查看订单详情
         </Link>
         <Link
           href="/products"
-          className="inline-block px-6 py-2.5 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+          className="inline-block px-6 py-2.5 border border-white/10 rounded-lg text-void-300 hover:bg-white/5 transition-colors"
         >
           继续浏览
         </Link>

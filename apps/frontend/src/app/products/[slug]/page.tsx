@@ -32,7 +32,7 @@ export default function ProductDetailPage() {
   if (isLoading) return <Loading />;
   if (isError || !product) {
     return (
-      <div className="max-w-6xl mx-auto px-4 py-16 text-center text-gray-400">
+      <div className="max-w-6xl mx-auto px-4 py-16 text-center text-void-500 dark:text-void-400">
         产品不存在或已下架
       </div>
     );
@@ -55,8 +55,8 @@ export default function ProductDetailPage() {
               onClick={() => setActiveTab('images')}
               className={`text-sm pb-2 border-b-2 transition-colors ${
                 activeTab === 'images'
-                  ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700'
+                  ? 'border-cyber-400 text-cyber-500 dark:text-cyber-400'
+                  : 'border-transparent text-void-500 dark:text-void-400 hover:text-void-800 dark:hover:text-void-200'
               }`}
             >
               产品图片
@@ -66,8 +66,8 @@ export default function ProductDetailPage() {
                 onClick={() => setActiveTab('model3d')}
                 className={`text-sm pb-2 border-b-2 transition-colors ${
                   activeTab === 'model3d'
-                    ? 'border-blue-500 text-blue-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700'
+                    ? 'border-cyber-400 text-cyber-400'
+                    : 'border-transparent text-void-500 dark:text-void-400 hover:text-void-800 dark:hover:text-void-200'
                 }`}
               >
                 3D 预览
@@ -78,7 +78,7 @@ export default function ProductDetailPage() {
           {activeTab === 'images' ? (
             <ImageGallery images={product.images} />
           ) : (
-            <div className="border rounded-lg overflow-hidden">
+            <div className="border border-void-200 dark:border-white/5 rounded-lg overflow-hidden">
               <ModelViewer fileUrl={product.model3d?.fileUrl} />
             </div>
           )}
@@ -86,9 +86,9 @@ export default function ProductDetailPage() {
 
         {/* 中间：产品信息 */}
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">{product.name}</h1>
+          <h1 className="text-2xl font-bold text-void-900 dark:text-void-100">{product.name}</h1>
           {product.subtitle && (
-            <p className="text-gray-500 mt-2">{product.subtitle}</p>
+            <p className="text-void-500 dark:text-void-400 mt-2">{product.subtitle}</p>
           )}
 
           <div className="flex flex-wrap gap-2 mt-4">
@@ -96,7 +96,7 @@ export default function ProductDetailPage() {
               <Link
                 key={cat.id}
                 href={`/categories/${cat.slug}`}
-                className="text-xs bg-blue-50 text-blue-600 px-2 py-1 rounded hover:bg-blue-100"
+                className="text-xs bg-cyber-400/10 text-cyber-400 px-2 py-1 rounded hover:bg-cyber-400/20 border border-cyber-400/20 transition-colors"
               >
                 {cat.name}
               </Link>
@@ -105,14 +105,14 @@ export default function ProductDetailPage() {
 
           <div className="flex flex-wrap gap-2 mt-2">
             {product.materials.map((m) => (
-              <span key={m} className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
+              <span key={m} className="text-xs bg-void-100 dark:bg-white/5 text-void-600 dark:text-void-300 px-2 py-1 rounded border border-void-200 dark:border-white/5">
                 {m}
               </span>
             ))}
             {product.techniques.map((t) => (
               <span
                 key={t}
-                className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded"
+                className="text-xs bg-void-100 dark:bg-white/5 text-void-600 dark:text-void-300 px-2 py-1 rounded border border-void-200 dark:border-white/5"
               >
                 {t}
               </span>
@@ -121,8 +121,8 @@ export default function ProductDetailPage() {
 
           {product.description && (
             <div className="mt-6">
-              <h3 className="font-medium text-gray-900 mb-2">产品描述</h3>
-              <p className="text-gray-600 text-sm leading-relaxed whitespace-pre-line">
+              <h3 className="font-medium text-void-800 dark:text-void-100 mb-2">产品描述</h3>
+              <p className="text-void-600 dark:text-void-300 text-sm leading-relaxed whitespace-pre-line">
                 {product.description}
               </p>
             </div>
@@ -130,12 +130,12 @@ export default function ProductDetailPage() {
 
           {product.specs.length > 0 && (
             <div className="mt-6">
-              <h3 className="font-medium text-gray-900 mb-2">规格参数</h3>
-              <div className="border rounded-lg divide-y">
+              <h3 className="font-medium text-void-800 dark:text-void-100 mb-2">规格参数</h3>
+              <div className="border border-void-200 dark:border-white/8 rounded-lg divide-y divide-void-200 dark:divide-white/5">
                 {product.specs.map((spec, i) => (
                   <div key={i} className="flex px-4 py-2.5 text-sm">
-                    <span className="text-gray-500 w-24 shrink-0">{spec.name}</span>
-                    <span className="text-gray-900">{spec.value}</span>
+                    <span className="text-void-500 dark:text-void-400 w-24 shrink-0">{spec.name}</span>
+                    <span className="text-void-800 dark:text-void-200">{spec.value}</span>
                   </div>
                 ))}
               </div>
@@ -143,15 +143,15 @@ export default function ProductDetailPage() {
           )}
 
           {product.tolerance && (
-            <p className="mt-4 text-sm text-gray-500">
+            <p className="mt-4 text-sm text-void-500 dark:text-void-400">
               公差: {product.tolerance}
             </p>
           )}
         </div>
 
         {/* 右侧：SKU 选择 + 双 CTA */}
-        <div className="lg:border-l lg:pl-8">
-          <h3 className="font-medium text-gray-900 mb-4">选择规格</h3>
+        <div className="lg:border-l lg:border-void-200 dark:lg:border-white/8 lg:pl-8">
+          <h3 className="font-medium text-void-800 dark:text-void-100 mb-4">选择规格</h3>
           <SKUSelector skus={product.skus} onSelect={setSelectedSku} />
 
           <div className="flex flex-col gap-3 mt-6">
@@ -168,7 +168,7 @@ export default function ProductDetailPage() {
             </button>
             <Link
               href={`/inquiry?productSlug=${slug}`}
-              className="w-full py-3.5 border-2 border-blue-500 text-blue-600 rounded-xl font-semibold text-center hover:bg-blue-50 hover:border-blue-600 transition-all duration-200"
+              className="w-full py-3.5 border border-cyber-400/30 text-cyber-400 rounded-xl font-semibold text-center hover:bg-cyber-400/5 hover:border-cyber-400/50 transition-all duration-200"
             >
               代打询价
             </Link>
@@ -178,8 +178,8 @@ export default function ProductDetailPage() {
 
       {/* 相关产品 */}
       {related && related.length > 0 && (
-        <section className="mt-16 pt-8 border-t">
-          <h2 className="text-xl font-bold mb-6">相关产品</h2>
+        <section className="mt-16 pt-8 border-t border-void-200 dark:border-white/8">
+          <h2 className="text-xl font-bold text-void-900 dark:text-void-100 mb-6">相关产品</h2>
           <ProductGrid products={related} />
         </section>
       )}

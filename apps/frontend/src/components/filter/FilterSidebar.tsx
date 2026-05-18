@@ -26,8 +26,8 @@ function CategoryTreeItem({ node, depth = 0 }: { node: CategoryNode; depth?: num
     <div>
       <button
         onClick={handleClick}
-        className={`w-full text-left px-2 py-1.5 rounded text-sm hover:bg-gray-100 transition-colors ${
-          active ? 'bg-blue-50 text-blue-600 font-medium' : 'text-gray-700'
+        className={`w-full text-left px-2 py-1.5 rounded text-sm hover:bg-void-100 dark:hover:bg-white/5 transition-colors ${
+          active ? 'bg-cyber-400/10 text-cyber-500 dark:text-cyber-400 font-medium' : 'text-void-600 dark:text-void-300'
         }`}
         style={{ paddingLeft: `${12 + depth * 16}px` }}
       >
@@ -84,7 +84,7 @@ export default function FilterSidebar() {
     <aside className="w-60 shrink-0 space-y-6">
       {/* 分类 */}
       <div>
-        <h4 className="font-medium text-sm text-gray-900 mb-2">产品分类</h4>
+        <h4 className="font-medium text-sm text-void-800 dark:text-void-100 mb-2">产品分类</h4>
         <div className="max-h-60 overflow-y-auto">
           {categories.map((node) => (
             <CategoryTreeItem key={node.id} node={node} />
@@ -94,20 +94,20 @@ export default function FilterSidebar() {
 
       {/* 材质 */}
       <div>
-        <h4 className="font-medium text-sm text-gray-900 mb-2">材质</h4>
+        <h4 className="font-medium text-sm text-void-800 dark:text-void-100 mb-2">材质</h4>
         <div className="space-y-1">
           {MATERIAL_LIST.map((m) => (
             <label
               key={m}
-              className={`flex items-center gap-2 text-sm px-2 py-1 rounded cursor-pointer hover:bg-gray-50 ${
-                activeMaterial === m ? 'text-blue-600' : 'text-gray-600'
+              className={`flex items-center gap-2 text-sm px-2 py-1 rounded cursor-pointer hover:bg-void-100 dark:hover:bg-white/5 ${
+                activeMaterial === m ? 'text-cyber-500 dark:text-cyber-400' : 'text-void-600 dark:text-void-300'
               }`}
             >
               <input
                 type="checkbox"
                 checked={activeMaterial === m}
                 onChange={() => toggleFilter('material', m)}
-                className="rounded"
+                className="rounded accent-cyber-400"
               />
               {m}
             </label>
@@ -117,20 +117,20 @@ export default function FilterSidebar() {
 
       {/* 工艺 */}
       <div>
-        <h4 className="font-medium text-sm text-gray-900 mb-2">打印工艺</h4>
+        <h4 className="font-medium text-sm text-void-800 dark:text-void-100 mb-2">打印工艺</h4>
         <div className="space-y-1">
           {TECHNIQUE_LIST.map((t) => (
             <label
               key={t}
-              className={`flex items-center gap-2 text-sm px-2 py-1 rounded cursor-pointer hover:bg-gray-50 ${
-                activeTechnique === t ? 'text-blue-600' : 'text-gray-600'
+              className={`flex items-center gap-2 text-sm px-2 py-1 rounded cursor-pointer hover:bg-void-100 dark:hover:bg-white/5 ${
+                activeTechnique === t ? 'text-cyber-500 dark:text-cyber-400' : 'text-void-600 dark:text-void-300'
               }`}
             >
               <input
                 type="checkbox"
                 checked={activeTechnique === t}
                 onChange={() => toggleFilter('technique', t)}
-                className="rounded"
+                className="rounded accent-cyber-400"
               />
               {t}
             </label>
@@ -140,26 +140,26 @@ export default function FilterSidebar() {
 
       {/* 价格区间 */}
       <div>
-        <h4 className="font-medium text-sm text-gray-900 mb-2">价格区间</h4>
+        <h4 className="font-medium text-sm text-void-800 dark:text-void-100 mb-2">价格区间</h4>
         <form onSubmit={handlePriceSubmit} className="flex items-center gap-2">
           <input
             name="minPrice"
             type="number"
             placeholder="最低"
             defaultValue={minPrice}
-            className="w-full px-2 py-1.5 text-sm border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="w-full px-2 py-1.5 text-sm bg-void-100 dark:bg-void-800 border border-void-300 dark:border-white/10 rounded text-void-800 dark:text-void-200 placeholder:text-void-400 dark:placeholder:text-void-500 focus:outline-none focus:ring-1 focus:ring-cyber-500 dark:focus:ring-cyber-400"
           />
-          <span className="text-gray-400">-</span>
+          <span className="text-void-400 dark:text-void-500">-</span>
           <input
             name="maxPrice"
             type="number"
             placeholder="最高"
             defaultValue={maxPrice}
-            className="w-full px-2 py-1.5 text-sm border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="w-full px-2 py-1.5 text-sm bg-void-100 dark:bg-void-800 border border-void-300 dark:border-white/10 rounded text-void-800 dark:text-void-200 placeholder:text-void-400 dark:placeholder:text-void-500 focus:outline-none focus:ring-1 focus:ring-cyber-500 dark:focus:ring-cyber-400"
           />
           <button
             type="submit"
-            className="px-3 py-1.5 text-sm bg-blue-500 text-white rounded hover:bg-blue-600"
+            className="px-3 py-1.5 text-sm bg-cyber-500 text-void-900 rounded hover:bg-cyber-400 font-medium transition-colors"
           >
             确定
           </button>

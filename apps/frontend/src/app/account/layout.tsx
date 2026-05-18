@@ -20,12 +20,12 @@ export default function AccountLayout({ children }: { children: React.ReactNode 
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold mb-8">个人中心</h1>
+      <h1 className="text-2xl font-bold mb-8 text-void-100">个人中心</h1>
       <div className="flex gap-8">
         <aside className="w-48 shrink-0">
-          <div className="mb-4 pb-4 border-b">
-            <p className="font-medium text-gray-900">{user?.name || user?.username}</p>
-            <p className="text-sm text-gray-500">{user?.phone}</p>
+          <div className="mb-4 pb-4 border-b border-white/8">
+            <p className="font-medium text-void-100">{user?.name || user?.username}</p>
+            <p className="text-sm text-void-400">{user?.phone}</p>
           </div>
           <nav className="space-y-1">
             {navItems.map((item) => (
@@ -34,8 +34,8 @@ export default function AccountLayout({ children }: { children: React.ReactNode 
                 href={item.href}
                 className={`block px-3 py-2 rounded-lg text-sm transition-colors ${
                   pathname.startsWith(item.href)
-                    ? 'bg-blue-50 text-blue-600 font-medium'
-                    : 'text-gray-600 hover:bg-gray-50'
+                    ? 'bg-cyber-400/10 text-cyber-400 font-medium'
+                    : 'text-void-300 hover:bg-white/5'
                 }`}
               >
                 {item.label}

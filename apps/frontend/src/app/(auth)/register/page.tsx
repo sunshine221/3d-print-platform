@@ -38,58 +38,60 @@ export default function RegisterPage() {
     }
   };
 
+  const inputClass = 'w-full px-3 py-2 bg-void-100 dark:bg-void-800 border border-void-300 dark:border-white/10 rounded-lg text-void-800 dark:text-void-200 placeholder:text-void-400 dark:placeholder:text-void-500 focus:outline-none focus:ring-2 focus:ring-cyber-500 dark:focus:ring-cyber-400 focus:border-transparent';
+
   return (
     <div>
-      <h1 className="text-2xl font-bold text-center mb-8">注册</h1>
+      <h1 className="text-2xl font-bold text-center mb-8 text-void-900 dark:text-void-100">注册</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">手机号</label>
+          <label className="block text-sm font-medium text-void-600 dark:text-void-300 mb-1">手机号</label>
           <input
             type="tel"
             required
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className={inputClass}
             placeholder="请输入11位手机号"
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">密码</label>
+          <label className="block text-sm font-medium text-void-600 dark:text-void-300 mb-1">密码</label>
           <input
             type="password"
             required
             minLength={6}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className={inputClass}
             placeholder="至少6位"
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">确认密码</label>
+          <label className="block text-sm font-medium text-void-600 dark:text-void-300 mb-1">确认密码</label>
           <input
             type="password"
             required
             minLength={6}
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className={inputClass}
             placeholder="再次输入密码"
           />
         </div>
         {error && (
-          <p className="text-red-500 text-sm">{error}</p>
+          <p className="text-red-400 text-sm">{error}</p>
         )}
         <button
           type="submit"
           disabled={submitting}
-          className="w-full py-2.5 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 disabled:bg-gray-300 transition-colors"
+          className="gradient-btn w-full py-2.5 rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none"
         >
           {submitting ? '注册中...' : '注册'}
         </button>
       </form>
-      <p className="mt-6 text-center text-sm text-gray-500">
-        已有账号？<Link href="/login" className="text-blue-600 hover:underline">去登录</Link>
+      <p className="mt-6 text-center text-sm text-void-500 dark:text-void-400">
+        已有账号？<Link href="/login" className="text-cyber-500 dark:text-cyber-400 hover:text-cyber-600 dark:hover:text-cyber-300">去登录</Link>
       </p>
     </div>
   );

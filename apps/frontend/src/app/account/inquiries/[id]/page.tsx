@@ -35,7 +35,7 @@ export default function InquiryDetailPage() {
   }, [data]);
 
   if (isLoading) return <Loading />;
-  if (!data) return <p className="text-gray-400">询价不存在</p>;
+  if (!data) return <p className="text-void-400">询价不存在</p>;
 
   const inquiry = data as any;
 
@@ -55,20 +55,19 @@ export default function InquiryDetailPage() {
 
   return (
     <div>
-      <Link href="/account/inquiries" className="text-sm text-blue-600 hover:underline mb-4 inline-block">
+      <Link href="/account/inquiries" className="text-sm text-cyber-400 hover:text-cyber-300 mb-4 inline-block">
         ← 返回询价列表
       </Link>
 
-      {/* 询价信息 */}
-      <div className="border rounded-lg p-6 mb-6">
+      <div className="card-dark p-6 mb-6">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h2 className="text-lg font-semibold">{inquiry.inquiryNo}</h2>
-            <p className="text-sm text-gray-500">
+            <h2 className="text-lg font-semibold text-void-100">{inquiry.inquiryNo}</h2>
+            <p className="text-sm text-void-400">
               {new Date(inquiry.createdAt).toLocaleString('zh-CN')}
             </p>
           </div>
-          <span className="text-sm px-3 py-1 rounded bg-blue-50 text-blue-600 font-medium">
+          <span className="text-sm px-3 py-1 rounded bg-cyber-400/10 text-cyber-400 font-medium border border-cyber-400/20">
             {STATUS_MAP[inquiry.status] || inquiry.status}
           </span>
         </div>
@@ -76,82 +75,80 @@ export default function InquiryDetailPage() {
         <div className="grid grid-cols-2 gap-3 text-sm">
           {inquiry.productName && (
             <div>
-              <span className="text-gray-500">关联产品：</span>
-              <span>{inquiry.productName}</span>
+              <span className="text-void-400">关联产品：</span>
+              <span className="text-void-200">{inquiry.productName}</span>
             </div>
           )}
           {inquiry.desiredMaterial && (
             <div>
-              <span className="text-gray-500">期望材质：</span>
-              <span>{inquiry.desiredMaterial}</span>
+              <span className="text-void-400">期望材质：</span>
+              <span className="text-void-200">{inquiry.desiredMaterial}</span>
             </div>
           )}
           {inquiry.desiredColor && (
             <div>
-              <span className="text-gray-500">期望颜色：</span>
-              <span>{inquiry.desiredColor}</span>
+              <span className="text-void-400">期望颜色：</span>
+              <span className="text-void-200">{inquiry.desiredColor}</span>
             </div>
           )}
           {inquiry.desiredQuantity && (
             <div>
-              <span className="text-gray-500">期望数量：</span>
-              <span>{inquiry.desiredQuantity}</span>
+              <span className="text-void-400">期望数量：</span>
+              <span className="text-void-200">{inquiry.desiredQuantity}</span>
             </div>
           )}
           {inquiry.desiredSize && (
             <div>
-              <span className="text-gray-500">期望尺寸：</span>
-              <span>{inquiry.desiredSize}</span>
+              <span className="text-void-400">期望尺寸：</span>
+              <span className="text-void-200">{inquiry.desiredSize}</span>
             </div>
           )}
           {inquiry.desiredDeadline && (
             <div>
-              <span className="text-gray-500">期望交期：</span>
-              <span>{new Date(inquiry.desiredDeadline).toLocaleDateString('zh-CN')}</span>
+              <span className="text-void-400">期望交期：</span>
+              <span className="text-void-200">{new Date(inquiry.desiredDeadline).toLocaleDateString('zh-CN')}</span>
             </div>
           )}
         </div>
 
         {inquiry.additionalNotes && (
-          <div className="mt-4 p-3 bg-gray-50 rounded-lg text-sm text-gray-700">
+          <div className="mt-4 p-3 bg-white/5 rounded-lg text-sm text-void-300 border border-white/5">
             {inquiry.additionalNotes}
           </div>
         )}
 
-        {/* 报价信息 */}
         {inquiry.adminQuoteTotalPrice != null && (
-          <div className="mt-4 p-4 bg-blue-50 rounded-lg">
-            <h4 className="font-medium text-blue-900 mb-2">管理员报价</h4>
+          <div className="mt-4 p-4 bg-cyber-400/5 rounded-lg border border-cyber-400/10">
+            <h4 className="font-medium text-cyber-400 mb-2">管理员报价</h4>
             <div className="grid grid-cols-2 gap-2 text-sm">
               <div>
-                <span className="text-blue-700">单价：</span>
-                <span>¥{(inquiry.adminQuoteUnitPrice / 100).toFixed(2)}</span>
+                <span className="text-void-400">单价：</span>
+                <span className="text-void-200">¥{(inquiry.adminQuoteUnitPrice / 100).toFixed(2)}</span>
               </div>
               <div>
-                <span className="text-blue-700">数量：</span>
-                <span>{inquiry.adminQuoteQuantity}</span>
+                <span className="text-void-400">数量：</span>
+                <span className="text-void-200">{inquiry.adminQuoteQuantity}</span>
               </div>
               <div>
-                <span className="text-blue-700 font-semibold">总价：</span>
-                <span className="font-semibold">¥{(inquiry.adminQuoteTotalPrice / 100).toFixed(2)}</span>
+                <span className="text-void-400 font-semibold">总价：</span>
+                <span className="font-semibold text-cyber-400">¥{(inquiry.adminQuoteTotalPrice / 100).toFixed(2)}</span>
               </div>
               {inquiry.adminQuoteDeliveryDays && (
                 <div>
-                  <span className="text-blue-700">交期：</span>
-                  <span>{inquiry.adminQuoteDeliveryDays} 天</span>
+                  <span className="text-void-400">交期：</span>
+                  <span className="text-void-200">{inquiry.adminQuoteDeliveryDays} 天</span>
                 </div>
               )}
             </div>
             {inquiry.adminQuoteNote && (
-              <p className="mt-2 text-sm text-blue-800">{inquiry.adminQuoteNote}</p>
+              <p className="mt-2 text-sm text-void-300">{inquiry.adminQuoteNote}</p>
             )}
           </div>
         )}
       </div>
 
-      {/* 消息列表 */}
-      <div className="border rounded-lg p-6 mb-6">
-        <h3 className="font-medium mb-4">沟通记录</h3>
+      <div className="card-dark p-6 mb-6">
+        <h3 className="font-medium text-void-100 mb-4">沟通记录</h3>
         <div className="space-y-4 max-h-96 overflow-y-auto">
           {(inquiry.messages || []).map((msg: any) => (
             <div
@@ -161,12 +158,12 @@ export default function InquiryDetailPage() {
               <div
                 className={`max-w-[80%] px-4 py-2 rounded-lg text-sm ${
                   msg.senderType === 'customer'
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-gray-100 text-gray-900'
+                    ? 'bg-cyber-500 text-white'
+                    : 'bg-white/5 text-void-200 border border-white/5'
                 }`}
               >
                 <p>{msg.content}</p>
-                <p className={`text-xs mt-1 ${msg.senderType === 'customer' ? 'text-blue-200' : 'text-gray-400'}`}>
+                <p className={`text-xs mt-1 ${msg.senderType === 'customer' ? 'text-cyber-200' : 'text-void-500'}`}>
                   {new Date(msg.createdAt).toLocaleString('zh-CN')}
                 </p>
               </div>
@@ -182,12 +179,12 @@ export default function InquiryDetailPage() {
             onChange={(e) => setMessage(e.target.value)}
             onKeyDown={(e) => { if (e.key === 'Enter') handleSend(); }}
             placeholder="输入消息..."
-            className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+            className="flex-1 px-3 py-2 bg-void-800 border border-white/10 rounded-lg text-void-200 placeholder:text-void-500 focus:outline-none focus:ring-2 focus:ring-cyber-400 text-sm"
           />
           <button
             onClick={handleSend}
             disabled={sending || !message.trim()}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 disabled:bg-gray-300 transition-colors"
+            className="gradient-btn px-4 py-2 rounded-lg text-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none"
           >
             发送
           </button>

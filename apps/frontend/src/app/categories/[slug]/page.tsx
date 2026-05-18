@@ -58,7 +58,7 @@ export default function CategoryPage() {
         ]}
       />
 
-      <h1 className="text-2xl font-bold mt-4 mb-6">
+      <h1 className="text-2xl font-bold text-void-100 mt-4 mb-6">
         {categoryPath[categoryPath.length - 1]?.name || slug}
       </h1>
 
@@ -72,7 +72,7 @@ export default function CategoryPage() {
           ) : (
             <>
               {pagination && (
-                <p className="text-sm text-gray-500 mt-4 mb-6">
+                <p className="text-sm text-void-400 mt-4 mb-6">
                   共 {pagination.total} 个产品
                 </p>
               )}

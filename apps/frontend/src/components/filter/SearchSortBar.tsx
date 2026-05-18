@@ -35,13 +35,13 @@ export default function SearchSortBar() {
           type="text"
           placeholder="搜索产品..."
           defaultValue={search}
-          className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+          className="w-full px-4 py-2 bg-void-100 dark:bg-void-800 border border-void-300 dark:border-white/10 rounded-lg text-void-800 dark:text-void-200 placeholder:text-void-400 dark:placeholder:text-void-500 focus:outline-none focus:ring-2 focus:ring-cyber-500 dark:focus:ring-cyber-400 text-sm"
         />
       </form>
       <select
         value={sort}
         onChange={(e) => updateParam('sort', e.target.value)}
-        className="px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="px-3 py-2 bg-void-100 dark:bg-void-800 border border-void-300 dark:border-white/10 rounded-lg text-sm text-void-800 dark:text-void-200 focus:outline-none focus:ring-2 focus:ring-cyber-500 dark:focus:ring-cyber-400"
       >
         <option value="default">默认排序</option>
         <option value="newest">最新发布</option>

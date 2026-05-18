@@ -45,7 +45,7 @@ function ProductList() {
           ) : (
             <>
               {pagination && (
-                <p className="text-sm text-gray-500 mt-4 mb-6">
+                <p className="text-sm text-void-400 mt-4 mb-6">
                   共 {pagination.total} 个产品
                 </p>
               )}

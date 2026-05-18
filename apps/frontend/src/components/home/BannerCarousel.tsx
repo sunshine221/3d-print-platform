@@ -25,27 +25,30 @@ export default function BannerCarousel({ banners }: Props) {
 
   if (items.length === 0) {
     return (
-      <section className="relative overflow-hidden bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 text-white">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-white/10 via-transparent to-transparent" />
-        <div className="absolute inset-0 bg-grid-white/[0.05] bg-[size:40px_40px]" />
+      <section className="relative overflow-hidden bg-gradient-to-br from-void-900 via-void-800 to-void-950 text-white">
+        <div className="absolute inset-0 grid-bg opacity-40" />
+        <div className="scan-line-overlay" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-cyber-400/5 via-transparent to-transparent" />
+        <div className="absolute top-20 right-20 w-64 h-64 bg-cyber-400/3 rounded-full blur-3xl" />
+        <div className="absolute bottom-10 left-20 w-48 h-48 bg-neon-400/3 rounded-full blur-3xl" />
         <div className="relative max-w-6xl mx-auto px-4 py-28 text-center">
-          <h1 className="text-5xl font-extrabold tracking-tight mb-4 animate-fade-up">
+          <h1 className="text-5xl font-extrabold tracking-tight mb-4 animate-fade-up gradient-text-cyan">
             高精度 3D 打印服务
           </h1>
-          <p className="text-xl mb-10 text-blue-100 max-w-xl mx-auto animate-fade-up" style={{ animationDelay: '100ms', animationFillMode: 'both' }}>
+          <p className="text-xl mb-10 text-void-200 max-w-xl mx-auto animate-fade-up" style={{ animationDelay: '100ms', animationFillMode: 'both' }}>
             多种材质 · 快速交付 · 品质保证
           </p>
           <div className="flex items-center justify-center gap-4 animate-fade-up" style={{ animationDelay: '200ms', animationFillMode: 'both' }}>
             <Link
               href="/products"
-              className="inline-flex items-center gap-2 bg-white text-blue-700 px-8 py-3.5 rounded-xl font-semibold hover:bg-blue-50 transition-all shadow-lg shadow-black/10 hover:shadow-xl hover:-translate-y-0.5"
+              className="inline-flex items-center gap-2 bg-cyber-500 text-void-900 px-8 py-3.5 rounded-xl font-semibold hover:bg-cyber-400 transition-all shadow-glow-cyan hover:shadow-glow-cyan hover:-translate-y-0.5"
             >
               浏览产品
               <span>→</span>
             </Link>
             <Link
               href="/inquiry"
-              className="inline-flex items-center gap-2 bg-white/10 text-white px-8 py-3.5 rounded-xl font-semibold hover:bg-white/20 transition-all backdrop-blur-sm border border-white/20"
+              className="inline-flex items-center gap-2 bg-white/5 text-white px-8 py-3.5 rounded-xl font-semibold hover:bg-white/10 transition-all backdrop-blur-sm border border-white/10 hover:border-cyber-400/30"
             >
               代打询价
             </Link>
@@ -56,7 +59,9 @@ export default function BannerCarousel({ banners }: Props) {
   }
 
   return (
-    <section className="relative overflow-hidden bg-gray-900 h-[420px]">
+    <section className="relative overflow-hidden bg-void-950 h-[420px]">
+      <div className="absolute inset-0 grid-bg opacity-20 z-10 pointer-events-none" />
+      <div className="scan-line-overlay z-10" />
       {items.map((banner, i) => (
         <div
           key={banner.id}
@@ -69,19 +74,19 @@ export default function BannerCarousel({ banners }: Props) {
             alt={banner.title || ''}
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-          <div className="absolute inset-0 flex items-center justify-center">
+          <div className="absolute inset-0 bg-gradient-to-t from-void-950 via-void-900/60 to-void-900/30" />
+          <div className="absolute inset-0 flex items-center justify-center z-20">
             <div className="text-center text-white px-4">
               {banner.title && (
-                <h2 className="text-4xl font-bold mb-3 drop-shadow-lg">{banner.title}</h2>
+                <h2 className="text-4xl font-bold mb-3 gradient-text-cyan drop-shadow-lg">{banner.title}</h2>
               )}
               {banner.subtitle && (
-                <p className="text-lg text-gray-200 drop-shadow">{banner.subtitle}</p>
+                <p className="text-lg text-void-200 drop-shadow">{banner.subtitle}</p>
               )}
               {banner.linkUrl && (
                 <Link
                   href={banner.linkUrl}
-                  className="inline-block mt-6 bg-white/90 backdrop-blur-sm text-gray-900 px-6 py-2.5 rounded-xl font-medium hover:bg-white transition-all hover:shadow-lg"
+                  className="inline-block mt-6 bg-cyber-500/90 backdrop-blur-sm text-void-900 px-6 py-2.5 rounded-xl font-medium hover:bg-cyber-400 transition-all shadow-glow-cyan"
                 >
                   了解更多
                 </Link>
@@ -93,28 +98,28 @@ export default function BannerCarousel({ banners }: Props) {
 
       {items.length > 1 && (
         <>
-          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2.5">
+          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2.5 z-30">
             {items.map((_, i) => (
               <button
                 key={i}
                 onClick={() => setCurrent(i)}
                 className={`transition-all duration-300 rounded-full ${
                   i === current
-                    ? 'w-8 h-2.5 bg-white'
-                    : 'w-2.5 h-2.5 bg-white/40 hover:bg-white/60'
+                    ? 'w-8 h-2.5 bg-cyber-400 shadow-glow-cyan-sm'
+                    : 'w-2.5 h-2.5 bg-white/20 hover:bg-white/40'
                 }`}
               />
             ))}
           </div>
           <button
             onClick={() => setCurrent((c) => (c - 1 + items.length) % items.length)}
-            className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm text-white/70 hover:bg-white/20 hover:text-white transition-all flex items-center justify-center"
+            className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/5 backdrop-blur-sm text-white/50 hover:bg-white/10 hover:text-cyber-400 transition-all flex items-center justify-center z-30 border border-white/5"
           >
             ‹
           </button>
           <button
             onClick={next}
-            className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm text-white/70 hover:bg-white/20 hover:text-white transition-all flex items-center justify-center"
+            className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/5 backdrop-blur-sm text-white/50 hover:bg-white/10 hover:text-cyber-400 transition-all flex items-center justify-center z-30 border border-white/5"
           >
             ›
           </button>
