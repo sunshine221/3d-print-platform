@@ -17,6 +17,7 @@
 | 005 | [Next.js 开发模式 CSS 丢失](005-nextjs-css-missing-dev.md) | 前端 / Next.js | 2026-05-12 |
 | 006 | [Prisma 连接 PostgreSQL peer 认证失败](006-prisma-postgresql-peer-auth.md) | 数据库 | 2026-05-12 |
 | 007 | [双主题（亮色/暗色）实现方案](007-dual-theme-css-variables.md) | 前端 / 设计 / 决策 | 2026-05-18 |
+| 008 | [管理后台移动端响应式适配 + antd message 上下文修复](008-admin-mobile-responsive-message-context.md) | 前端 / 模式 | 2026-05-19 |
 
 ## 参考文档
 
