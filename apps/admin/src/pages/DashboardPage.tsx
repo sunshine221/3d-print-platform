@@ -34,21 +34,21 @@ interface RecentInquiry {
   user: { phone: string; name: string | null };
 }
 
-const STATUS_COLORS: Record<string, string> = {
-  pending_confirmation: 'orange',
-  in_production: 'blue',
-  shipped: 'purple',
-  completed: 'green',
-  cancelled: 'red',
+const ORDER_STATUS_MAP: Record<string, { color: string; label: string }> = {
+  pending_confirmation: { color: 'gold', label: '待确认' },
+  in_production: { color: 'blue', label: '生产中' },
+  shipped: { color: 'purple', label: '已发货' },
+  completed: { color: 'green', label: '已完成' },
+  cancelled: { color: 'default', label: '已取消' },
 };
 
-const INQUIRY_STATUS_COLORS: Record<string, string> = {
-  pending_review: 'orange',
-  quoted: 'blue',
-  negotiating: 'purple',
-  accepted: 'green',
-  rejected: 'red',
-  closed: 'default',
+const INQUIRY_STATUS_MAP: Record<string, { color: string; label: string }> = {
+  pending_review: { color: 'gold', label: '待审核' },
+  quoted: { color: 'blue', label: '已报价' },
+  negotiating: { color: 'purple', label: '协商中' },
+  accepted: { color: 'green', label: '已接受' },
+  rejected: { color: 'red', label: '已拒绝' },
+  closed: { color: 'default', label: '已关闭' },
 };
 
 const statCards = [
@@ -122,7 +122,7 @@ export default function DashboardPage() {
                 border: 'none',
                 overflow: 'hidden',
               }}
-              bodyStyle={{ padding: 0 }}
+              styles={{ body: { padding: 0 } }}
             >
               <div style={{ display: 'flex', alignItems: 'stretch' }}>
                 <div
@@ -180,19 +180,20 @@ export default function DashboardPage() {
           <Card
             title={<span style={{ fontWeight: 600, fontSize: 15 }}>最新订单</span>}
             style={{ borderRadius: 12 }}
-            bodyStyle={{ padding: '0 24px 24px' }}
+            styles={{ body: { padding: '0 24px 24px' } }}
           >
             <Table
               dataSource={recentOrders}
               rowKey="id"
               pagination={false}
               size="small"
+              scroll={{ x: 'max-content' }}
               columns={[
                 { title: '订单号', dataIndex: 'orderNo', key: 'orderNo', width: 160 },
                 {
                   title: '用户',
                   key: 'user',
-                  width: 180,
+                  width: 130,
                   render: (_: unknown, r: RecentOrder) => r.user.phone,
                 },
                 {
@@ -201,7 +202,7 @@ export default function DashboardPage() {
                   key: 'totalPrice',
                   width: 100,
                   render: (v: string) => (
-                    <span style={{ fontWeight: 600 }}>¥{Number(v).toFixed(2)}</span>
+                    <span style={{ fontWeight: 600 }}>¥{(Number(v) / 100).toFixed(2)}</span>
                   ),
                 },
                 {
@@ -209,7 +210,10 @@ export default function DashboardPage() {
                   dataIndex: 'status',
                   key: 'status',
                   width: 90,
-                  render: (s: string) => <Tag color={STATUS_COLORS[s] || 'default'}>{s}</Tag>,
+                  render: (s: string) => {
+                    const cfg = ORDER_STATUS_MAP[s] || { color: 'default', label: s };
+                    return <Tag color={cfg.color}>{cfg.label}</Tag>;
+                  },
                 },
               ]}
             />
@@ -219,19 +223,20 @@ export default function DashboardPage() {
           <Card
             title={<span style={{ fontWeight: 600, fontSize: 15 }}>最新询价</span>}
             style={{ borderRadius: 12 }}
-            bodyStyle={{ padding: '0 24px 24px' }}
+            styles={{ body: { padding: '0 24px 24px' } }}
           >
             <Table
               dataSource={recentInquiries}
               rowKey="id"
               pagination={false}
               size="small"
+              scroll={{ x: 'max-content' }}
               columns={[
                 { title: '询价号', dataIndex: 'inquiryNo', key: 'inquiryNo', width: 160 },
                 {
                   title: '用户',
                   key: 'user',
-                  width: 180,
+                  width: 130,
                   render: (_: unknown, r: RecentInquiry) => r.user.phone,
                 },
                 {
@@ -239,9 +244,10 @@ export default function DashboardPage() {
                   dataIndex: 'status',
                   key: 'status',
                   width: 90,
-                  render: (s: string) => (
-                    <Tag color={INQUIRY_STATUS_COLORS[s] || 'default'}>{s}</Tag>
-                  ),
+                  render: (s: string) => {
+                    const cfg = INQUIRY_STATUS_MAP[s] || { color: 'default', label: s };
+                    return <Tag color={cfg.color}>{cfg.label}</Tag>;
+                  },
                 },
               ]}
             />

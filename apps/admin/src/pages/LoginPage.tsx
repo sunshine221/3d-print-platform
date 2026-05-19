@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { Form, Input, Button, Card, message } from 'antd';
+import { Form, Input, Button, Card, App } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import axios from 'axios';
 
 export default function LoginPage() {
+  const { message } = App.useApp();
   const [loading, setLoading] = useState(false);
 
   const onFinish = async (values: { account: string; password: string }) => {
@@ -59,12 +60,14 @@ export default function LoginPage() {
 
       <Card
         style={{
-          width: 400,
+          maxWidth: 400,
+          width: '100%',
+          margin: '0 16px',
           borderRadius: 16,
           boxShadow: '0 25px 50px rgba(0,0,0,0.15)',
           border: 'none',
         }}
-        bodyStyle={{ padding: '40px 32px' }}
+        styles={{ body: { padding: '40px 32px' } }}
       >
         <div style={{ textAlign: 'center', marginBottom: 32 }}>
           <div

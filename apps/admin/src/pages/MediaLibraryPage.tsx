@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import {
-  Table, Button, Modal, Upload, Breadcrumb, Space, Popconfirm, message,
-  Card, Input,
+  Table, Button, Modal, Upload, Breadcrumb, Space, Popconfirm,
+  Card, Input, App,
 } from 'antd';
 import {
   UploadOutlined, FolderAddOutlined, DeleteOutlined,
@@ -23,6 +23,7 @@ interface MediaItem {
 }
 
 export default function MediaLibraryPage() {
+  const { message } = App.useApp();
   const [data, setData] = useState<MediaItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [folderId, setFolderId] = useState<string | null>(null);
@@ -152,7 +153,7 @@ export default function MediaLibraryPage() {
 
   return (
     <div>
-      <h2>素材库</h2>
+      <h2 style={{ marginBottom: 16 }}>素材库</h2>
 
       <Card style={{ marginBottom: 16 }}>
         <Space>
@@ -190,6 +191,7 @@ export default function MediaLibraryPage() {
         rowKey="id"
         loading={loading}
         pagination={false}
+        scroll={{ x: 'max-content' }}
       />
 
       <Modal title="上传文件" open={uploadOpen} onCancel={() => setUploadOpen(false)} footer={null}>

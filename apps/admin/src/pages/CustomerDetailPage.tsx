@@ -50,10 +50,10 @@ export default function CustomerDetailPage() {
       </div>
 
       <Row gutter={16} style={{ marginBottom: 16 }}>
-        <Col span={6}>
+        <Col xs={24} sm={12} lg={6}>
           <Card><Statistic title="订单数" value={user._count.orders} /></Card>
         </Col>
-        <Col span={6}>
+        <Col xs={24} sm={12} lg={6}>
           <Card><Statistic title="询价数" value={user._count.inquiries} /></Card>
         </Col>
       </Row>

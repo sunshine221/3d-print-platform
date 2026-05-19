@@ -8,10 +8,8 @@ import {
   Space,
   Tag,
   Popconfirm,
-  message,
-  Row,
-  Col,
   Card,
+  App,
 } from 'antd';
 import {
   PlusOutlined,
@@ -52,6 +50,7 @@ const TYPE_MAP: Record<string, string> = {
 };
 
 export default function ProductListPage() {
+  const { message } = App.useApp();
   const navigate = useNavigate();
   const [data, setData] = useState<ProductItem[]>([]);
   const [loading, setLoading] = useState(false);
@@ -221,45 +220,40 @@ export default function ProductListPage() {
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 16 }}>
-        <h2>产品管理</h2>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, flexWrap: 'wrap', gap: 8 }}>
+        <h2 style={{ margin: 0 }}>产品管理</h2>
         <Button type="primary" icon={<PlusOutlined />} onClick={() => navigate('/products/create')}>
           新增产品
         </Button>
       </div>
 
       <Card style={{ marginBottom: 16 }}>
-        <Row gutter={16}>
-          <Col span={8}>
-            <Input
-              placeholder="搜索产品名称或 slug"
-              prefix={<SearchOutlined />}
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              onPressEnter={() => fetchData()}
-              allowClear
-            />
-          </Col>
-          <Col span={4}>
-            <Select
-              placeholder="状态筛选"
-              value={statusFilter}
-              onChange={(v) => setStatusFilter(v)}
-              allowClear
-              style={{ width: '100%' }}
-              options={[
-                { value: 'draft', label: '草稿' },
-                { value: 'published', label: '已上架' },
-                { value: 'archived', label: '已下架' },
-              ]}
-            />
-          </Col>
-          <Col span={4}>
-            <Button type="primary" onClick={() => fetchData()}>
-              搜索
-            </Button>
-          </Col>
-        </Row>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center' }}>
+          <Input
+            placeholder="搜索产品名称或 slug"
+            prefix={<SearchOutlined />}
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            onPressEnter={() => fetchData()}
+            allowClear
+            style={{ flex: '1 1 180px', minWidth: 140 }}
+          />
+          <Select
+            placeholder="状态筛选"
+            value={statusFilter}
+            onChange={(v) => setStatusFilter(v)}
+            allowClear
+            style={{ width: 120, flexShrink: 0 }}
+            options={[
+              { value: 'draft', label: '草稿' },
+              { value: 'published', label: '已上架' },
+              { value: 'archived', label: '已下架' },
+            ]}
+          />
+          <Button type="primary" onClick={() => fetchData()} style={{ marginLeft: 'auto' }}>
+            搜索
+          </Button>
+        </div>
       </Card>
 
       {selectedRowKeys.length > 0 && (
@@ -291,8 +285,9 @@ export default function ProductListPage() {
           onChange: (page, pageSize) => fetchData(page, pageSize),
           showSizeChanger: true,
           showTotal: (total) => `共 ${total} 条`,
+          position: ['bottomRight'],
         }}
-        scroll={{ x: 1300 }}
+        scroll={{ x: 'max-content' }}
       />
     </div>
   );

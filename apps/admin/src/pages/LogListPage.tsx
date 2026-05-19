@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Table, Select, Card, Row, Col } from 'antd';
+import { Table, Select, Button, Card } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
 import api from '../services/api';
 
 interface LogItem {
@@ -70,26 +71,27 @@ export default function LogListPage() {
 
   return (
     <div>
-      <h2>操作日志</h2>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, flexWrap: 'wrap', gap: 8 }}>
+        <h2 style={{ margin: 0 }}>操作日志</h2>
+      </div>
 
       <Card style={{ marginBottom: 16 }}>
-        <Row gutter={16}>
-          <Col span={4}>
-            <Select
-              placeholder="操作类型"
-              value={actionFilter}
-              onChange={(v) => setActionFilter(v)}
-              allowClear
-              style={{ width: '100%' }}
-              options={[
-                { value: 'POST', label: '创建' },
-                { value: 'PATCH', label: '更新' },
-                { value: 'PUT', label: '批量更新' },
-                { value: 'DELETE', label: '删除' },
-              ]}
-            />
-          </Col>
-        </Row>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center' }}>
+          <Select
+            placeholder="操作类型"
+            value={actionFilter}
+            onChange={(v) => setActionFilter(v)}
+            allowClear
+            style={{ width: 140, flexShrink: 0 }}
+            options={[
+              { value: 'POST', label: '创建' },
+              { value: 'PATCH', label: '更新' },
+              { value: 'PUT', label: '批量更新' },
+              { value: 'DELETE', label: '删除' },
+            ]}
+          />
+          <Button type="primary" icon={<SearchOutlined />} onClick={() => fetchData()} style={{ marginLeft: 'auto' }}>搜索</Button>
+        </div>
       </Card>
 
       <Table
@@ -102,8 +104,11 @@ export default function LogListPage() {
           pageSize: pagination.pageSize,
           total: pagination.total,
           onChange: (page, pageSize) => fetchData(page, pageSize),
+          showSizeChanger: true,
           showTotal: (total) => `共 ${total} 条`,
+          position: ['bottomRight'],
         }}
+        scroll={{ x: 'max-content' }}
       />
     </div>
   );

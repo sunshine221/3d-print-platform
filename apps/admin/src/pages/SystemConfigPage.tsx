@@ -1,11 +1,12 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Tabs, Form, Input, Button, Card, Spin, message, Space } from 'antd';
+import { Tabs, Form, Input, Button, Card, Spin, Space, App } from 'antd';
 import { SaveOutlined } from '@ant-design/icons';
 import api from '../services/api';
 
 type ConfigMap = Record<string, Record<string, string>>;
 
 export default function SystemConfigPage() {
+  const { message } = App.useApp();
   const [config, setConfig] = useState<ConfigMap>({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);

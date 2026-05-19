@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import {
-  Table, Button, Modal, Tag, Input, Space, message, Form,
+  Table, Button, Modal, Tag, Input, Space, Form, App, Card,
 } from 'antd';
-import { EyeOutlined } from '@ant-design/icons';
+import { EyeOutlined, SearchOutlined } from '@ant-design/icons';
 import api from '../services/api';
 
 interface ContactMessage {
@@ -16,9 +16,11 @@ interface ContactMessage {
 }
 
 export default function ContactMessagePage() {
+  const { message } = App.useApp();
   const [data, setData] = useState<ContactMessage[]>([]);
   const [loading, setLoading] = useState(false);
   const [pagination, setPagination] = useState({ page: 1, pageSize: 20, total: 0 });
+  const [search, setSearch] = useState('');
   const [detailOpen, setDetailOpen] = useState(false);
   const [detail, setDetail] = useState<ContactMessage | null>(null);
   const [replyText, setReplyText] = useState('');
@@ -26,13 +28,15 @@ export default function ContactMessagePage() {
   const fetchData = useCallback(async (page = 1, pageSize = 20) => {
     setLoading(true);
     try {
-      const res = await api.get('/admin/contact', { params: { page, pageSize } });
+      const params: Record<string, unknown> = { page, pageSize };
+      if (search) params.search = search;
+      const res = await api.get('/admin/contact', { params });
       setData(res.data?.items || []);
       setPagination(res.data?.pagination || { page, pageSize, total: 0 });
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [search]);
 
   useEffect(() => { fetchData(); }, [fetchData]);
 
@@ -94,7 +98,24 @@ export default function ContactMessagePage() {
 
   return (
     <div>
-      <h2>联系我们</h2>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, flexWrap: 'wrap', gap: 8 }}>
+        <h2 style={{ margin: 0 }}>联系我们</h2>
+      </div>
+
+      <Card style={{ marginBottom: 16 }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center' }}>
+          <Input
+            placeholder="搜索姓名、邮箱、内容"
+            prefix={<SearchOutlined />}
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            onPressEnter={() => fetchData()}
+            allowClear
+            style={{ flex: '1 1 180px', minWidth: 140 }}
+          />
+          <Button type="primary" onClick={() => fetchData()} style={{ marginLeft: 'auto' }}>搜索</Button>
+        </div>
+      </Card>
 
       <Table
         columns={columns}
@@ -106,8 +127,11 @@ export default function ContactMessagePage() {
           pageSize: pagination.pageSize,
           total: pagination.total,
           onChange: (page, pageSize) => fetchData(page, pageSize),
+          showSizeChanger: true,
           showTotal: (total) => `共 ${total} 条`,
+          position: ['bottomRight'],
         }}
+        scroll={{ x: 'max-content' }}
       />
 
       <Modal

@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  Table, Button, Input, Tag, Space, Popconfirm, message, Card, Row, Col,
+  Table, Button, Input, Tag, Space, Popconfirm, Card, App,
 } from 'antd';
 import { SearchOutlined, EyeOutlined } from '@ant-design/icons';
 import api from '../services/api';
@@ -22,6 +22,7 @@ const STATUS_MAP: Record<string, { color: string; label: string }> = {
 };
 
 export default function CustomerListPage() {
+  const { message } = App.useApp();
   const navigate = useNavigate();
   const [data, setData] = useState<UserItem[]>([]);
   const [loading, setLoading] = useState(false);
@@ -106,24 +107,23 @@ export default function CustomerListPage() {
 
   return (
     <div>
-      <h2>客户管理</h2>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, flexWrap: 'wrap', gap: 8 }}>
+        <h2 style={{ margin: 0 }}>客户管理</h2>
+      </div>
 
       <Card style={{ marginBottom: 16 }}>
-        <Row gutter={16}>
-          <Col span={8}>
-            <Input
-              placeholder="搜索用户名、姓名、手机号"
-              prefix={<SearchOutlined />}
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              onPressEnter={() => fetchData()}
-              allowClear
-            />
-          </Col>
-          <Col span={4}>
-            <Button type="primary" onClick={() => fetchData()}>搜索</Button>
-          </Col>
-        </Row>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center' }}>
+          <Input
+            placeholder="搜索用户名、姓名、手机号"
+            prefix={<SearchOutlined />}
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            onPressEnter={() => fetchData()}
+            allowClear
+            style={{ flex: '1 1 180px', minWidth: 140 }}
+          />
+          <Button type="primary" onClick={() => fetchData()} style={{ marginLeft: 'auto' }}>搜索</Button>
+        </div>
       </Card>
 
       <Table
@@ -136,8 +136,11 @@ export default function CustomerListPage() {
           pageSize: pagination.pageSize,
           total: pagination.total,
           onChange: (page, pageSize) => fetchData(page, pageSize),
+          showSizeChanger: true,
           showTotal: (total) => `共 ${total} 条`,
+          position: ['bottomRight'],
         }}
+        scroll={{ x: 'max-content' }}
       />
     </div>
   );

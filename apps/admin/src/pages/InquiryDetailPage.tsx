@@ -8,9 +8,9 @@ import {
   Space,
   Timeline,
   Input,
-  message,
   Modal,
   InputNumber,
+  App,
 } from 'antd';
 import api from '../services/api';
 
@@ -24,6 +24,7 @@ const STATUS_MAP: Record<string, { color: string; label: string }> = {
 };
 
 export default function InquiryDetailPage() {
+  const { message } = App.useApp();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [inquiry, setInquiry] = useState<any>(null);

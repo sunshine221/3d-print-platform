@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import {
-  Table, Button, Modal, Form, Input, InputNumber, Switch, Space, Popconfirm, message, Upload,
+  Table, Button, Modal, Form, Input, InputNumber, Switch, Space, Popconfirm, Upload, App,
 } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined, UploadOutlined } from '@ant-design/icons';
 import type { UploadFile } from 'antd/es/upload/interface';
@@ -21,6 +21,7 @@ const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 const MAX_SIZE = 5 * 1024 * 1024; // 5MB
 
 export default function BannerPage() {
+  const { message } = App.useApp();
   const [data, setData] = useState<Banner[]>([]);
   const [loading, setLoading] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
@@ -153,12 +154,12 @@ export default function BannerPage() {
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 16 }}>
-        <h2>Banner 管理</h2>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, flexWrap: 'wrap', gap: 8 }}>
+        <h2 style={{ margin: 0 }}>Banner 管理</h2>
         <Button type="primary" icon={<PlusOutlined />} onClick={openCreate}>新增 Banner</Button>
       </div>
 
-      <Table columns={columns} dataSource={data} rowKey="id" loading={loading} />
+      <Table columns={columns} dataSource={data} rowKey="id" loading={loading} scroll={{ x: 'max-content' }} />
 
       <Modal
         title={editing ? '编辑 Banner' : '新增 Banner'}

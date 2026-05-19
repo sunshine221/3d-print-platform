@@ -14,10 +14,10 @@ import {
   Switch,
   Tag,
   Popconfirm,
-  message,
   Upload,
   Row,
   Col,
+  App,
 } from 'antd';
 import {
   PlusOutlined,
@@ -93,6 +93,7 @@ const STOCK_STATUS_OPTIONS = [
 ];
 
 export default function ProductEditPage() {
+  const { message } = App.useApp();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const isCreate = !id;
@@ -385,12 +386,12 @@ export default function ProductEditPage() {
         <Card>
           <Form form={form} layout="vertical">
             <Row gutter={16}>
-              <Col span={12}>
+              <Col xs={24} sm={12}>
                 <Form.Item name="name" label="产品名称" rules={[{ required: true }]}>
                   <Input maxLength={200} />
                 </Form.Item>
               </Col>
-              <Col span={12}>
+              <Col xs={24} sm={12}>
                 <Form.Item name="slug" label="Slug" rules={[{ required: true }]}>
                   <Input maxLength={250} />
                 </Form.Item>
@@ -403,7 +404,7 @@ export default function ProductEditPage() {
               <Input.TextArea rows={6} />
             </Form.Item>
             <Row gutter={16}>
-              <Col span={8}>
+              <Col xs={24} sm={8}>
                 <Form.Item name="productType" label="产品类型" rules={[{ required: true }]}>
                   <Select
                     options={[
@@ -414,7 +415,7 @@ export default function ProductEditPage() {
                   />
                 </Form.Item>
               </Col>
-              <Col span={8}>
+              <Col xs={24} sm={8}>
                 <Form.Item name="categoryIds" label="分类">
                   <Select
                     mode="multiple"
@@ -423,7 +424,7 @@ export default function ProductEditPage() {
                   />
                 </Form.Item>
               </Col>
-              <Col span={8}>
+              <Col xs={24} sm={8}>
                 <Form.Item name="status" label="状态">
                   <Select
                     options={[
@@ -450,21 +451,21 @@ export default function ProductEditPage() {
               </div>
               {specs.map((spec, idx) => (
                 <Row key={idx} gutter={8} style={{ marginBottom: 8 }}>
-                  <Col span={8}>
+                  <Col xs={24} sm={8}>
                     <Input
                       placeholder="参数名"
                       value={spec.name}
                       onChange={(e) => updateSpec(idx, 'name', e.target.value)}
                     />
                   </Col>
-                  <Col span={14}>
+                  <Col xs={24} sm={14}>
                     <Input
                       placeholder="参数值"
                       value={spec.value}
                       onChange={(e) => updateSpec(idx, 'value', e.target.value)}
                     />
                   </Col>
-                  <Col span={2}>
+                  <Col xs={24} sm={2}>
                     <Button danger icon={<DeleteOutlined />} onClick={() => removeSpecRow(idx)} />
                   </Col>
                 </Row>
@@ -523,24 +524,24 @@ export default function ProductEditPage() {
                   <InputNumber min={0} precision={2} style={{ width: '100%' }} />
                 </Form.Item>
                 <Row gutter={16}>
-                  <Col span={12}>
+                  <Col xs={24} sm={12}>
                     <Form.Item name="minOrderQty" label="起订量">
                       <InputNumber min={1} style={{ width: '100%' }} />
                     </Form.Item>
                   </Col>
-                  <Col span={12}>
+                  <Col xs={24} sm={12}>
                     <Form.Item name="stockStatus" label="库存状态">
                       <Select options={STOCK_STATUS_OPTIONS} />
                     </Form.Item>
                   </Col>
                 </Row>
                 <Row gutter={16}>
-                  <Col span={12}>
+                  <Col xs={24} sm={12}>
                     <Form.Item name="leadTimeDays" label="交货周期（天）">
                       <InputNumber min={0} style={{ width: '100%' }} />
                     </Form.Item>
                   </Col>
-                  <Col span={12}>
+                  <Col xs={24} sm={12}>
                     <Form.Item name="status" label="状态">
                       <Select
                         options={[
@@ -635,8 +636,8 @@ export default function ProductEditPage() {
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 16 }}>
-        <h2>{isCreate ? '新增产品' : `编辑: ${product?.name || ''}`}</h2>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, flexWrap: 'wrap', gap: 8 }}>
+        <h2 style={{ margin: 0 }}>{isCreate ? '新增产品' : `编辑: ${product?.name || ''}`}</h2>
         <Button onClick={() => navigate('/products')}>返回列表</Button>
       </div>
       <Tabs items={tabItems} />

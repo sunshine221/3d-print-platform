@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Form, Input, Button, Card, Spin, message, Space } from 'antd';
+import { Form, Input, Button, Card, Spin, Space, App } from 'antd';
 import { SaveOutlined } from '@ant-design/icons';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -17,6 +17,7 @@ interface Page {
 }
 
 export default function PageEditPage() {
+  const { message } = App.useApp();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [page, setPage] = useState<Page | null>(null);

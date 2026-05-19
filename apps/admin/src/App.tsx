@@ -1,5 +1,8 @@
+import { useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
+import { App as AntdApp } from 'antd';
 import AdminLayout from './components/layout/AdminLayout';
+import { setMessageApi } from './services/messageHolder';
 import DashboardPage from './pages/DashboardPage';
 import LoginPage from './pages/LoginPage';
 import ProductListPage from './pages/ProductListPage';
@@ -20,7 +23,12 @@ import CustomerDetailPage from './pages/CustomerDetailPage';
 import LogListPage from './pages/LogListPage';
 
 export default function App() {
+  const { message } = AntdApp.useApp();
   const hasToken = !!localStorage.getItem('admin_token');
+
+  useEffect(() => {
+    setMessageApi(message);
+  }, [message]);
 
   return (
     <Routes>

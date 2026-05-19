@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import {
-  Table, Button, Modal, Form, Input, InputNumber, Select, Switch, Space, Popconfirm, message, Upload,
+  Table, Button, Modal, Form, Input, InputNumber, Select, Switch, Space, Popconfirm, Upload, App,
 } from 'antd';
 import {
   PlusOutlined, EditOutlined, DeleteOutlined, ArrowUpOutlined, ArrowDownOutlined, UploadOutlined,
@@ -25,6 +25,7 @@ const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 const MAX_SIZE = 5 * 1024 * 1024; // 5MB
 
 export default function CategoryPage() {
+  const { message } = App.useApp();
   const [categories, setCategories] = useState<CategoryNode[]>([]);
   const [loading, setLoading] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
@@ -228,8 +229,8 @@ export default function CategoryPage() {
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 16 }}>
-        <h2>分类管理</h2>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, flexWrap: 'wrap', gap: 8 }}>
+        <h2 style={{ margin: 0 }}>分类管理</h2>
         <Button type="primary" icon={<PlusOutlined />} onClick={() => openCreate()}>
           新增分类
         </Button>
@@ -242,6 +243,7 @@ export default function CategoryPage() {
         loading={loading}
         defaultExpandAllRows
         pagination={false}
+        scroll={{ x: 'max-content' }}
       />
 
       <Modal

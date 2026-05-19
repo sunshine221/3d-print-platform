@@ -9,9 +9,9 @@ import {
   Space,
   Timeline,
   Input,
-  message,
   Select,
   Modal,
+  App,
 } from 'antd';
 import api from '../services/api';
 
@@ -24,6 +24,7 @@ const STATUS_MAP: Record<string, { color: string; label: string }> = {
 };
 
 export default function OrderDetailPage() {
+  const { message } = App.useApp();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [order, setOrder] = useState<any>(null);
